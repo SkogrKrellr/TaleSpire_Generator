@@ -1,12 +1,14 @@
-from typing import Generator
 import unittest
-import generator.generator as Generator
+from generator.generator import Generator
 
 class TestGenerator(unittest.TestCase):
 
-    def setUp(self) -> None:
-        self.generator = Generator()
+    @classmethod
+    def setUpClass(self) -> None:
+        self.gen = Generator()
     
     def tearDown(self) -> None:
         return super().tearDown()
         
+    def test_getElevation(self) -> None:
+        self.gen.generateElevation()

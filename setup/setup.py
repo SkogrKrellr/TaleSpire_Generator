@@ -4,6 +4,7 @@ from classes.database import Database
 from classes.prop import Prop
 from classes.tile import Tile
 from classes.config import config as Config
+from generator.generator import Generator
 
 def FirstTimeSetup() -> None:
     CreateTables()
