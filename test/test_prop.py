@@ -1,85 +1,32 @@
 import unittest
 import json
 from classes.prop import Prop
+import setup.setup as Setup
 
-class TestAsset(unittest.TestCase):
-
+class TestProp(unittest.TestCase):
+    
     @classmethod
     def setUpClass(self) -> None:
+        print("\nProp: " ,end = '')
         self.maxDiff = None
-        self.prop = Prop(json.loads('{"Id":"32cfd208-c363-4434-b817-8ba59faeed17","Name":"Castle Floor 1","Assets":[{"LoaderData":{"AssetName":"Castle01_floor_1x1_low"},"Position":{"x":0.5,"y":0.5,"z":0.5},"Rotation":{"x":0,"y":0,"z":0,"w":1},"Scale":{"x":1,"y":1,"z":1}}],"ColliderBoundsBound":{"m_Center":{"x":0.5,"y":0.25,"z":0.5},"m_Extent":{"x":0.5,"y":0.25,"z":0.5}}}'))
+        self.prop = Prop(
+            Setup.remap(json.loads(
+                '{"Id":"6e22a681-4902-4cc4-a5f2-2284fb3c53b6","Name":"Campfire","IsDeprecated":false,"GroupTag":"campfire","Tags":["1x1","campfire","illuminated","light","lit","fire","wood","stone","brown","grey","gray","rest","cooking","glow","glowing","travelling","small","camping","camp"],"Assets":[{"LoaderData":{"BundleId":"otr_vfx_fire01_1468140860","AssetName":"VFX_SmallFire"},"Position":{"x":0.020799368619918823,"y":0.29339998960494995,"z":0.04866328835487366},"Rotation":{"x":0,"y":0,"z":0,"w":1},"Scale":{"x":0.93205726146698,"y":0.93205726146698,"z":0.93205726146698}},{"LoaderData":{"BundleId":"tileset_lightingset_1471790033","AssetName":"Campfire_logs"},"Position":{"x":0.004819363355636597,"y":0,"z":0.1010565459728241},"Rotation":{"x":0,"y":0,"z":0,"w":1},"Scale":{"x":1,"y":1,"z":1}}],"IsInteractable":false,"ColliderBoundsBound":{"m_Center":{"x":0,"y":0.3435215950012207,"z":0},"m_Extent":{"x":0.38203075528144836,"y":0.34022027254104614,"z":0.36165329813957214}},"Icon":{"AtlasIndex":0,"Region":{"serializedVersion":"2","x":0.5,"y":0.6875,"width":0.0625,"height":0.0625}}}'
+                )
+            )
+        )
 
     def test_str(self):
         self.assertMultiLineEqual(
             self.prop.__str__(), 
-            """UUID: 32cfd208-c363-4434-b817-8ba59faeed17
-            Name: Castle Floor 1
-            Asset Name: Castle01_floor_1x1_low
-            Position:   x: 0.5 y: 0.5 z: 0.5 w: 0
+            """UUID: 6e22a681-4902-4cc4-a5f2-2284fb3c53b6
+            Name: Campfire
+            Asset Name: VFX_SmallFire
+            Position:   x: 0.020799368619918823 y: 0.29339998960494995 z: 0.04866328835487366 w: 0
             Rotation:   x: 0 y: 0 z: 0 w: 1
-            Scale:      x: 1 y: 1 z: 1 w: 0
-            mCenter:    x: 0.5 y: 0.25 z: 0.5 w: 0
-            mExtent:    x: 0.5 y: 0.25 z: 0.5 w: 0
+            Scale:      x: 0.93205726146698 y: 0.93205726146698 z: 0.93205726146698 w: 0
+            mCenter:    x: 0 y: 0.3435215950012207 z: 0 w: 0
+            mExtent:    x: 0.38203075528144836 y: 0.34022027254104614 z: 0.36165329813957214 w: 0
             """.strip()
         )
-
-    def test_toSql(self):
-        self.assertMultiLineEqual(
-            self.prop.Sql(),
-            """
-            INSERT INTO props 
-            (UUID,
-            Name,
-            AssetName,
-            Position_x, Position_y, Position_z, Position_w,
-            Rotation_x, Rotation_y, Rotation_z, Rotation_w,
-            Scale_x, Scale_y, Scale_z, Scale_w,
-            mCenter_x, mCenter_y, mCenter_z, mCenter_w,
-            mExtent_x, mExtent_y, mExtent_z, mExtent_w)
-            VALUES(
-                "32cfd208-c363-4434-b817-8ba59faeed17", 
-                "Castle Floor 1", 
-                "Castle01_floor_1x1_low", 
-                0.5, 0.5, 0.5, 0, 
-                0, 0, 0, 1,
-                1, 1, 1, 0,
-                0.5, 0.25, 0.5, 0,
-                0.5, 0.25, 0.5, 0
-            );""".strip()
-        )
-
-    def test_toSqlValues(self):
-        self.assertMultiLineEqual(
-            Prop.SqlValues(),
-            """UUID,
-            Name,
-            AssetName,
-            Position_x, Position_y, Position_z, Position_w,
-            Rotation_x, Rotation_y, Rotation_z, Rotation_w,
-            Scale_x, Scale_y, Scale_z, Scale_w,
-            mCenter_x, mCenter_y, mCenter_z, mCenter_w,
-            mExtent_x, mExtent_y, mExtent_z, mExtent_w
-            """.strip()
-        )
-
-    def test_tableCreationSql(self):
-        self.assertMultiLineEqual(
-            Prop.tableCreationSql(), 
-            """CREATE TABLE props (
-            ID INTEGER PRIMARY KEY AUTOINCREMENT,
-            UUID tinytext NOT NULL,
-            Name tinytext NOT NULL,
-            AssetName tinytext NOT NULL,
-            Position_x FLOAT(24), Position_y FLOAT(24), Position_z FLOAT(24), Position_w FLOAT(24),
-            Rotation_x FLOAT(24), Rotation_y FLOAT(24), Rotation_z FLOAT(24), Rotation_w FLOAT(24),
-            Scale_x FLOAT(24), Scale_y FLOAT(24), Scale_z FLOAT(24), Scale_w FLOAT(24),
-            mCenter_x FLOAT(24), mCenter_y FLOAT(24), mCenter_z FLOAT(24), mCenter_w FLOAT(24),
-            mExtent_x FLOAT(24), mExtent_y FLOAT(24), mExtent_z FLOAT(24), mExtent_w FLOAT(24));
-            """.strip()
-        )
-    
-    def test_dropTableSql(self):
-        self.assertMultiLineEqual(
-            Prop.dropTableSql(), 
-            """ DROP TABLE IF EXISTS props;""".strip()
-        )
+        

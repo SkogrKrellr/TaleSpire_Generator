@@ -3,9 +3,10 @@ from classes.database import Database
 from classes.config import config as Config
 
 class TestGenerator(unittest.TestCase):
-
+    
     @classmethod
     def setUpClass(self) -> None:
+        print("\nDatabase: " ,end = '')
         self.database = Database()
     
     @classmethod

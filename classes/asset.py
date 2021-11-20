@@ -1,5 +1,8 @@
-from abc import abstractmethod, abstractproperty
+from abc import abstractclassmethod, abstractmethod, abstractproperty
 from classes.quad import Quad
+from classes.config import config as Config
+
+TABLE_NAME = DATABASE_NAME = Config.get('tableName', 'assets')
 
 class Asset:
 
@@ -7,41 +10,42 @@ class Asset:
     def __init__(
         self,
         object
-    ) -> None:
-        self.id = 0
-        self.uuid = object["Id"]
+        ):
+        self.uuid = object["UUID"]
         self.name = object["Name"]
-        self.assetName =  object["Assets"][0]["LoaderData"]["AssetName"]
+        self.assetName =  object["AssetName"]
         self.position = Quad(
-            object["Assets"][0]["Position"]["x"],
-            object["Assets"][0]["Position"]["y"],
-            object["Assets"][0]["Position"]["z"],
-            0
+            object["Position"]["x"],
+            object["Position"]["y"],
+            object["Position"]["z"],
+            object["Position"]["w"]
         )
         self.rotation = Quad(
-            object["Assets"][0]["Rotation"]["x"],
-            object["Assets"][0]["Rotation"]["y"],
-            object["Assets"][0]["Rotation"]["z"],
-            object["Assets"][0]["Rotation"]["w"]
+            object["Rotation"]["x"],
+            object["Rotation"]["y"],
+            object["Rotation"]["z"],
+            object["Rotation"]["w"]
         )
         self.scale = Quad(
-            object["Assets"][0]["Scale"]["x"],
-            object["Assets"][0]["Scale"]["y"],
-            object["Assets"][0]["Scale"]["z"],
-            0
+            object["Scale"]["x"],
+            object["Scale"]["y"],
+            object["Scale"]["z"],
+            object["Scale"]["w"]
         )
         self.mCenter = Quad(
-            object["ColliderBoundsBound"]["m_Center"]["x"],
-            object["ColliderBoundsBound"]["m_Center"]["y"],
-            object["ColliderBoundsBound"]["m_Center"]["z"],
-            0
+            object["mCenter"]["x"],
+            object["mCenter"]["y"],
+            object["mCenter"]["z"],
+            object["mCenter"]["w"]
         )
         self.mExtent = Quad(
-            object["ColliderBoundsBound"]["m_Extent"]["x"],
-            object["ColliderBoundsBound"]["m_Extent"]["y"],
-            object["ColliderBoundsBound"]["m_Extent"]["z"],
-            0
+            object["mExtent"]["x"],
+            object["mExtent"]["y"],
+            object["mExtent"]["z"],
+            object["mExtent"]["w"]
         )
+
+# Miscellaneous
 
     def __str__(self) -> str:
         return f"""
@@ -55,47 +59,39 @@ class Asset:
             mExtent:    {self.mExtent}
         """.strip()
 
-    def SqlValues() -> str:
+# SQL operations
+    def SqlValues(self) -> str:
         return f"""
-            UUID,
-            Name,
-            AssetName,
-            {Quad.SqlValues("Position")},
-            {Quad.SqlValues("Rotation")},
-            {Quad.SqlValues("Scale")},
-            {Quad.SqlValues("mCenter")},
-            {Quad.SqlValues("mExtent")}
-        """.strip()
-
-    def Sql(self, tableName) -> str:
-        return f"""
-            INSERT INTO {tableName} 
-            ({Asset.SqlValues()})
+            INSERT INTO {TABLE_NAME} 
             VALUES(
-                "{self.uuid}", 
+                "{self.uuid}",
+                "{self.__class__.__name__}", 
                 "{self.name}", 
                 "{self.assetName}", 
-                {self.position.Sql()}, 
-                {self.rotation.Sql()},
-                {self.scale.Sql()},
-                {self.mCenter.Sql()},
-                {self.mExtent.Sql()}
+                {self.position.SqlValues()}, 
+                {self.rotation.SqlValues()},
+                {self.scale.SqlValues()},
+                {self.mCenter.SqlValues()},
+                {self.mExtent.SqlValues()}
             );
         """.strip()
-
-    def tableCreationSql(tableName) -> str:
+    
+    def SqlCreateTable() -> str:
         return f"""
-            CREATE TABLE {tableName} (
-            ID INTEGER PRIMARY KEY AUTOINCREMENT,
-            UUID tinytext NOT NULL,
+            CREATE TABLE {TABLE_NAME} (
+            UUID tinytext PRIMARY KEY,
+            Type tinytext NOT NULL,
             Name tinytext NOT NULL,
             AssetName tinytext NOT NULL,
-            {Quad.tableCreationSql("Position")},
-            {Quad.tableCreationSql("Rotation")},
-            {Quad.tableCreationSql("Scale")},
-            {Quad.tableCreationSql("mCenter")},
-            {Quad.tableCreationSql("mExtent")});
+            {Quad.SqlCreateTable("Position")},
+            {Quad.SqlCreateTable("Rotation")},
+            {Quad.SqlCreateTable("Scale")},
+            {Quad.SqlCreateTable("mCenter")},
+            {Quad.SqlCreateTable("mExtent")});
         """.strip()
-
-    def dropTableSql(tableName) -> str:
-        return f""" DROP TABLE IF EXISTS {tableName}; """.strip()
+    
+    def SqlDropTable() -> str:
+        return f""" DROP TABLE IF EXISTS {TABLE_NAME}; """.strip()
+    
+    def SqlGetAsset(uuid) -> str:
+        return f""" SELECT * FROM {TABLE_NAME} WHERE UUID = '{uuid}'; """.strip()
