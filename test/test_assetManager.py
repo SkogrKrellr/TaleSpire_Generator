@@ -7,10 +7,9 @@ class TestAssetManager(unittest.TestCase):
     @classmethod
     def setUpClass(self) -> None:
         print("\nAssetManager: " ,end = '')
-        self.assetManager = AssetManager()
 
     def test_getAsset(self):
-        object = self.assetManager.getAsset("32cfd208-c363-4434-b817-8ba59faeed17")
+        object = AssetManager.getAsset("32cfd208-c363-4434-b817-8ba59faeed17")
         self.assertMultiLineEqual(
             object.__str__(), 
             """UUID: 32cfd208-c363-4434-b817-8ba59faeed17

@@ -1,6 +1,7 @@
 import unittest
-import numpy
+
 from generator.generator import Generator
+from classes.asset_manager import AssetManager
 
 class TestGenerator(unittest.TestCase):
     
@@ -12,17 +13,33 @@ class TestGenerator(unittest.TestCase):
     def tearDown(self) -> None:
         return super().tearDown()
 
-    def prep(self):
+    def setUp(self):
         self.generator.setXYZ(3,3,10)
         self.generator.setOctaves(1, 0.5)
         self.generator.setScales(1, 64)
         self.generator.setExponent(2.0)
         
+    def arrayCompare(self, generated, expected, delta):
+        msg = ""
+        for x in range(0,3):
+            for y in range(0,3):
+                if abs(expected[x][y] - generated[x][y]) > delta:
+                    msg += f"""({x}, {y}) dif = { 
+                        round(expected[x][y] - generated[x][y], 4) 
+                        } expected: { 
+                            round(expected[x][y], 4) 
+                        } got: {
+                            round(generated[x][y], 4)
+                        }\n"""
+        if len(msg):
+            msg = "\nSome values are not equal: \n" + msg
+        return msg
+
     def test_setXYZ(self) -> None:
-        self.generator.setXYZ(15,10,5)
+        self.generator.setXYZ(15,10,10)
         self.assertEqual(self.generator.x, 15)
         self.assertEqual(self.generator.y, 10)
-        self.assertEqual(self.generator.z, 5)
+        self.assertEqual(self.generator.z, 10)
         self.assertEqual(self.generator.max_size, 15)
 
     def test_setOctaves(self) -> None:
@@ -46,38 +63,45 @@ class TestGenerator(unittest.TestCase):
         self.assertEqual(self.generator.noiseXY(643, 234), -0.4651744574140941)
 
     def test_setEmptyArray(self) -> None:
-        self.prep()
-        self.assertEqual(
-            self.generator.prettyPrintElevation(), 
-            "[[0. 0. 0.]\n [0. 0. 0.]\n [0. 0. 0.]]"
-        )
+        expected = [
+            [0., 0., 0.],
+            [0., 0., 0.],
+            [0., 0., 0.]
+        ]
+        msg = self.arrayCompare(self.generator.elevation, expected, 0.01)
+        self.assertTrue(len(msg)==0, msg = msg)
 
     def test_generateElevation(self) -> None:
-        self.prep()
+        expected = [
+            [0.5, 0.5, 0.5],
+            [0.5, 0.5, 0.5],
+            [0.5, 0.5, 0.5]
+        ]
         self.generator.generateElevation()
-        self.assertEqual(
-            self.generator.prettyPrintElevation(), 
-            "[[0.5 0.546 0.381]\n [0.466 0.478 0.498]\n [0.462 0.415 0.309]]"
-        )
+        msg = self.arrayCompare(self.generator.elevation, expected, 0.5)
+        self.assertTrue(len(msg)==0, msg = msg)
 
     def test_powerElevation(self) -> None:
-        self.prep()
+        expected = [
+            [0.25, 0.217, 0.213],
+            [0.298, 0.229, 0.172],
+            [0.145, 0.248, 0.095]
+        ]
         self.generator.generateElevation()
         self.generator.powerElevation()
-        self.assertEqual(
-            self.generator.prettyPrintElevation(), 
-            "[[0.25 0.298116 0.145161]\n [0.217156 0.228484 0.248004]\n [0.213444 0.172225 0.095481]]"
-        )
+        msg = self.arrayCompare(self.generator.elevation, expected, 0.01)
+        self.assertTrue(len(msg)==0, msg = msg)
 
     def test_scaleToZHeight(self) -> None:
-        self.prep()
+        expected = [
+            [5., 4.668, 4.620],
+            [5.467, 4.788, 4.151],
+            [3.811, 4.987, 3.096]
+        ]
         self.generator.generateElevation()
-        self.generator.scaleToZHeight()
-        self.assertEqual(
-            self.generator.prettyPrintElevation(), 
-            "[[5. 5.46 3.81]\n [4.66 4.78 4.98]\n [4.62 4.15 3.09]]"
-        )
-
-
-
-
+        self.generator.multiplyByValue()
+        msg = self.arrayCompare(self.generator.elevation, expected, 0.01)
+        self.assertTrue(len(msg)==0, msg = msg)
+            
+    
+        
