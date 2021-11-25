@@ -7,10 +7,11 @@ import setup.setup as Setup
 class AssetManager():
 
     def __init__ (self):
-        self.database = Database()
+        pass
 
-    def getAsset(self, uuid):
-        object = self.database.fetchall(Asset.SqlGetAsset(uuid))
+    def getAsset( uuid ):
+        database = Database()
+        object = database.fetchall(Asset.SqlGetAsset(uuid))
 
         assetDictionary = Setup.remap(object[0], True)
         className= globals()[assetDictionary["Type"]]
