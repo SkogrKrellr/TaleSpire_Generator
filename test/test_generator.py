@@ -1,7 +1,9 @@
 import unittest
+import pyperclip as pc
 
 from generator.generator import Generator
 from classes.asset_manager import AssetManager
+from converter.conversion_manager import ConversionManager
 
 class TestGenerator(unittest.TestCase):
     
@@ -102,6 +104,4 @@ class TestGenerator(unittest.TestCase):
         self.generator.multiplyByValue()
         msg = self.arrayCompare(self.generator.elevation, expected, 0.01)
         self.assertTrue(len(msg)==0, msg = msg)
-            
-    
-        
+
