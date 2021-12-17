@@ -4,6 +4,7 @@ from classes.tile import Tile
 from classes.prop import Prop
 from classes.customAsset import CustomAsset
 from classes.database import Database
+from converter.conversion_manager import ConversionManager
 
 class AssetManager():
 
@@ -13,7 +14,6 @@ class AssetManager():
     def getAsset( uuid ):
         database = Database()
         object = database.fetchall(Asset.SqlGetAsset(uuid))
-
         assetDictionary = AssetManager.remap(object[0], True)
         className= globals()[assetDictionary["Type"]]
         
@@ -32,9 +32,7 @@ class AssetManager():
         
         return customAsset.uuid
 
-    
     def remap(object, fromDB=False):
-
         result = {
             "Position": {},
             "Rotation": {},
@@ -43,9 +41,7 @@ class AssetManager():
             "mExtent": {}
         }
         
-
         if fromDB :
-            
             result["UUID"] = object[0]
             result["Type"] = object[1]
             result["Name"] = object[2]
@@ -55,7 +51,7 @@ class AssetManager():
             result["Position"]["x"] = object[5]
             result["Position"]["y"] = object[6]
             result["Position"]["z"] = object[7]
-            result["Position"]["w"] = 0
+            result["Position"]["w"] = object[8]
 
             result["Rotation"]["x"] = object[9]
             result["Rotation"]["y"] = object[10]
@@ -65,17 +61,17 @@ class AssetManager():
             result["Scale"]["x"] = object[13]
             result["Scale"]["y"] = object[14]
             result["Scale"]["z"] = object[15]
-            result["Scale"]["w"] = 0
+            result["Scale"]["w"] = object[16]
 
             result["mCenter"]["x"] = object[17]
             result["mCenter"]["y"] = object[18]
             result["mCenter"]["z"] = object[19]
-            result["mCenter"]["w"] = 0
+            result["mCenter"]["w"] = object[20]
 
             result["mExtent"]["x"] = object[21]
             result["mExtent"]["y"] = object[22]
             result["mExtent"]["z"] = object[23]
-            result["mExtent"]["w"] = 0
+            result["mExtent"]["w"] = object[24]
 
             return result
         
@@ -110,3 +106,10 @@ class AssetManager():
         result["mExtent"]["w"] = 0
 
         return result
+
+    def getAssetList( assetList ):
+        assets = []
+        for asset in assetList:
+            assets.append(AssetManager.getAsset(asset["Asset"]))
+
+        return assets

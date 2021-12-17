@@ -18,19 +18,19 @@ class TestProp(unittest.TestCase):
 
     def test_str(self):
         expected = f"""
-                    UUID: 6e22a681-4902-4cc4-a5f2-2284fb3c53b6
-                    Name: Campfire
-                    Asset Name: VFX_SmallFire
-                    String: 
-                    Position:   x: 0.020799368619918823 y: 0.29339998960494995 z: 0.04866328835487366 w: 0
-                    Rotation:   x: 0 y: 0 z: 0 w: 1
-                    Scale:      x: 0.93205726146698 y: 0.93205726146698 z: 0.93205726146698 w: 0
-                    mCenter:    x: 0 y: 0.3435215950012207 z: 0 w: 0
-                    mExtent:    x: 0.38203075528144836 y: 0.34022027254104614 z: 0.36165329813957214 w: 0
-                    """.strip()
+        UUID: 6e22a681-4902-4cc4-a5f2-2284fb3c53b6
+        Name: Campfire
+        Asset Name: VFX_SmallFire
+        String: 
+        Position:   x: 0.020799368619918823 y: 0.29339998960494995 z: 0.04866328835487366 w: 0
+        Rotation:   x: 0 y: 0 z: 0 w: 1
+        Scale:      x: 0.93205726146698 y: 0.93205726146698 z: 0.93205726146698 w: 0
+        mCenter:    x: 0 y: 0.3435215950012207 z: 0 w: 0
+        mExtent:    x: 0.38203075528144836 y: 0.34022027254104614 z: 0.36165329813957214 w: 0
+        """.strip()
 
         self.assertMultiLineEqual(
-            self.prop.__str__(), 
-            expected
+            expected,
+            self.prop.__str__()
         )
         

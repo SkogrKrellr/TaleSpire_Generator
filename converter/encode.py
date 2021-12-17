@@ -12,7 +12,6 @@ def create_header(unique_asset_count):
 def encode(data):
     slab_data = b'' 
     slab_json = json.loads(data)
-
     slab_json['unique_asset_count'] = len(slab_json['asset_data']) 
     
     for asset in slab_json['asset_data'].items():

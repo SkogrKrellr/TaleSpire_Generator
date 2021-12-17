@@ -28,12 +28,15 @@ def populateAssets():
     objects = json.load(jsonFile)
     jsonFile.close()
 
+    sqlQuerry = ""
+
     for object in objects["Tiles"]:
         tile = Tile(AssetManager.remap(object))
-        database.execute(tile.SqlValues())
-
+        sqlQuerry += tile.SqlValues()
+        
     for object in objects["Props"]:
         prop = Prop(AssetManager.remap(object))
-        database.execute(prop.SqlValues())
+        sqlQuerry += prop.SqlValues()
 
+    database.executeScript(sqlQuerry)
     database.close()

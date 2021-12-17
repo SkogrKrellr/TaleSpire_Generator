@@ -12,11 +12,15 @@ class Database:
 # Miscellaneous
     def close(self):
         self.connection.close()
+
+    def executeScript(self, script):
+        self.cursor.executescript(script)
+        self.connection.commit()
     
-    def execute(self, query: str):
+    def execute(self, query):
         self.cursor.execute(query)
         self.connection.commit()
 
-    def fetchall(self, query: str):
+    def fetchall(self, query):
         self.cursor.execute(query)
         return (self.cursor.fetchall())

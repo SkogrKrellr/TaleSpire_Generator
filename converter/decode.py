@@ -18,7 +18,7 @@ def decode_asset(asset_data):
     uuid = (dec_data[0], dec_data[1], dec_data[2], assemble_bytes(dec_data[3:5]), assemble_bytes(dec_data[5:11]))
     uuid_strings = (format(uuid[0], "08X"), format(uuid[1], "04X"), format(uuid[2], "04X"), format(uuid[3], "04X"), format(uuid[4], "012X"))
     instance_count = dec_data[11]
-    uuid_string = '-'.join(x for x in uuid_strings)
+    uuid_string = '-'.join(x for x in uuid_strings).lower()
     return {
         "uuid": uuid_string,
         "instance_count": instance_count,

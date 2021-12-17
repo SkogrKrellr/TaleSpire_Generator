@@ -17,6 +17,9 @@ class Quad:
     def __str__(self) -> str:
         return f"x: {self.x} y: {self.y} z: {self.z} w: {self.w}"
 
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+
 # SQL operations
     def SqlValues(self) -> str:
         return f"{self.x}, {self.y}, {self.z}, {self.w}"
