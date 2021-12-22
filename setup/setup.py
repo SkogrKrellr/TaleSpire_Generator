@@ -2,7 +2,7 @@ import json
 from os import name
 
 from classes.asset import Asset
-from classes.asset_manager import AssetManager
+from classes.assetManager import AssetManager
 from classes.prop import Prop
 from classes.tile import Tile
 from classes.customAsset import CustomAsset

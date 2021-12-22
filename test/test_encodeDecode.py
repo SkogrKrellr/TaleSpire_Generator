@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from converter.conversion_manager import ConversionManager
+from converter.conversionManager import ConversionManager
 
 class TestEncodeDecode(unittest.TestCase):
     

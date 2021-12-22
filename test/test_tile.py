@@ -1,6 +1,6 @@
 import unittest
 import json
-from classes.asset_manager import AssetManager
+from classes.assetManager import AssetManager
 from classes.tile import Tile
 
 class TestTile(unittest.TestCase):

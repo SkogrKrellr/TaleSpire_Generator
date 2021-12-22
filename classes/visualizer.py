@@ -12,7 +12,7 @@ class Vizualizer():
         plt.imshow(image, cmap=DEFAULT_CMAP, interpolation='None')
 
         if clip01:
-            plt.clim(0,1)
+            plt.clim(0,100)
 
         plt.colorbar()
         plt.show()

@@ -1,7 +1,7 @@
 import unittest
 import json
-from classes.asset_manager import AssetManager
-from converter.conversion_manager import ConversionManager
+from classes.assetManager import AssetManager
+from converter.conversionManager import ConversionManager
 
 class TestAssetManager(unittest.TestCase):
     

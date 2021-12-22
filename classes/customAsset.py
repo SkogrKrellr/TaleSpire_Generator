@@ -1,7 +1,7 @@
 from classes.config import *
 from classes.asset import Asset
 from classes.quad import Quad
-from converter.conversion_manager import ConversionManager
+from converter.conversionManager import ConversionManager
 
 class CustomAsset(Asset):
 

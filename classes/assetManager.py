@@ -4,7 +4,7 @@ from classes.tile import Tile
 from classes.prop import Prop
 from classes.customAsset import CustomAsset
 from classes.database import Database
-from converter.conversion_manager import ConversionManager
+from converter.conversionManager import ConversionManager
 
 class AssetManager():
 
@@ -110,6 +110,6 @@ class AssetManager():
     def getAssetList( assetList ):
         assets = []
         for asset in assetList:
-            assets.append(AssetManager.getAsset(asset["Asset"]))
+            assets.append(AssetManager.getAsset(asset.params["asset"]))
 
         return assets

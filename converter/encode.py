@@ -22,6 +22,11 @@ def encode(data):
     slab_data += asset_data[0] + asset_data[1] + PADDING
 
     slab_compressed_data = gzip.compress(slab_data, compresslevel=9, mtime=0)
+
+    if (len(slab_compressed_data) > 30720):
+        print(f"[WARNING] Slab exceeds TaleSpire size limit of 30kB (30720 bytes) binary data! Aborting. ({len(slab_compressed_data)} bytes)")
+        return b'``````'
+
     base64_bytes = base64.b64encode(slab_compressed_data)
 
     return b'```' + base64_bytes + b'```'

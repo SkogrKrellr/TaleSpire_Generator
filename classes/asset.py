@@ -1,7 +1,7 @@
 import uuid as UUID
 from classes.quad import Quad
 from classes.config import config as Config
-from converter.conversion_manager import ConversionManager
+from converter.conversionManager import ConversionManager
 
 TABLE_NAME = DATABASE_NAME = Config.get('tableName', 'assets')
 

@@ -1,9 +1,13 @@
 import unittest
+import matplotlib.pyplot as plt
+import numpy
 import pyperclip as pc
+from classes.visualizer import Vizualizer
 
 from generator.generator import Generator
-from classes.asset_manager import AssetManager
-from converter.conversion_manager import ConversionManager
+from classes.assetManager import AssetManager
+from converter.conversionManager import ConversionManager
+from generator.placeObjectSettings import PlaceObjectSettings
 
 class TestGenerator(unittest.TestCase):
     
@@ -42,28 +46,27 @@ class TestGenerator(unittest.TestCase):
         self.assertEqual(self.generator.x, 15)
         self.assertEqual(self.generator.y, 10)
         self.assertEqual(self.generator.z, 10)
-        self.assertEqual(self.generator.max_size, 15)
 
     def test_setOctaves(self) -> None:
         self.generator.setOctaves(1, 0.75, 0.5)
-        self.assertEqual(self.generator.octaves[0], 1)
-        self.assertEqual(self.generator.octaves[1], 0.75)
-        self.assertEqual(self.generator.octaves[2], 0.5)
+        self.assertEqual(self.generator.noise.octaves[0], 1)
+        self.assertEqual(self.generator.noise.octaves[1], 0.75)
+        self.assertEqual(self.generator.noise.octaves[2], 0.5)
 
     def test_setScales(self) -> None:
         self.generator.setScales(1, 4, 16)
-        self.assertEqual(self.generator.scales[0], 1)
-        self.assertEqual(self.generator.scales[1], 4)
-        self.assertEqual(self.generator.scales[2], 16)
+        self.assertEqual(self.generator.noise.scales[0], 1)
+        self.assertEqual(self.generator.noise.scales[1], 4)
+        self.assertEqual(self.generator.noise.scales[2], 16)
 
     def test_setExponent(self) -> None:
         self.generator.setExponent(0.78)
         self.assertEqual(self.generator.exponent, 0.78)
 
     def test_setSeed(self) -> None:
-        self.generator.setSeed(123456)
+        self.generator.noise.setSeed(123456789)
         #OpenSimplex
-        self.assertEqual(self.generator.noise.noise2d(5, 17), -0.27242633379853515)
+        self.assertEqual(self.generator.noise.noiseXY(5, 17), -0.79179780448877)
     
     def test_setTileSize(self) -> None:
         self.assertEqual(self.generator.tileSize, 0)
@@ -71,8 +74,8 @@ class TestGenerator(unittest.TestCase):
         self.assertEqual(self.generator.tileSize, 2)
 
     def test_noiseXY(self) -> None:
-        self.generator.setExponent(123456789)
-        self.assertEqual(self.generator.noiseXY(643, 234), -0.4651744574140941)
+        self.generator.noise.setSeed(123456)
+        self.assertEqual(self.generator.noise.noiseXY(643, 234), 0.2521903471662688)
 
     def test_setEmptyArray(self) -> None:
         expected = [
@@ -95,9 +98,9 @@ class TestGenerator(unittest.TestCase):
 
     def test_powerElevation(self) -> None:
         expected = [
-            [0.25, 0.217, 0.213],
-            [0.298, 0.229, 0.172],
-            [0.145, 0.248, 0.095]
+            [0.25, 0.3182, 0.3898],
+            [0.4968, 0.3754, 0.4385],
+            [0.3037, 0.2964, 0.2729]
         ]
         self.generator.generateElevation()
         self.generator.powerElevation()
@@ -106,9 +109,9 @@ class TestGenerator(unittest.TestCase):
 
     def test_scaleToZHeight(self) -> None:
         expected = [
-            [5., 4.668, 4.620],
-            [5.467, 4.788, 4.151],
-            [3.811, 4.987, 3.096]
+            [5., 5.6407, 6.2432],
+            [7.0483, 6.1271, 6.6219],
+            [5.5111, 5.4445, 5.2238]
         ]
         self.generator.generateElevation()
         self.generator.multiplyByValue()
@@ -121,41 +124,49 @@ class TestGenerator(unittest.TestCase):
 
         self.generator.setXYZ(20,20,20)
         self.generator.setOctaves(1, 0.5, 0.25)
-        self.generator.setScales(1, 1.5, 2)
-        self.generator.setExponent(2.0)
+        self.generator.setScales(1, 2, 4)
+        self.generator.setExponent(1.7)
         
-        groundAssets = [
-            {"Asset" : "01c3a210-94fb-449f-8c47-993eda3e7126", "Probability": 50},
-            {"Asset" : "3911d10d-142b-4f33-9fea-5d3a10c53781", "Probability": 50}
-        ]
+        groundAssets = Generator.createObjectList([
+            {"asset" : "01c3a210-94fb-449f-8c47-993eda3e7126", "density": 30},
+            {"asset" : "3911d10d-142b-4f33-9fea-5d3a10c53781", "density": 70}
+        ])
 
-        placeObjects = [
-            {"Asset" : "28b95682-24d4-48c1-ae40-c5f02404c9b1", "Probability": 20},
-            {"Asset" : AssetManager.addCustomAsset(
+        placeObjects1 = Generator.createObjectList([
+            {"asset" : AssetManager.addCustomAsset(
                 "Tree1",
                 "```H4sIAAAAAAAACzv369xFJgYmBgYGV8sOe+Zcb6+FuwOFhA/vvMUIFLuTvezpGXNx5y3HFu7oMZ70EiTGwMDBpAAk+RlgAAD5Z/KyRAAAAA==```"
-            ), "Probability": 25 },
-            {"Asset" : AssetManager.addCustomAsset(
+            ), "density": 10 },
+            {"asset" : AssetManager.addCustomAsset(
                 "Tree2",
                 "```H4sIAAAAAAAACzv369xFJgZmBgYGV8sOe+Zcb6+FuwOFhA/vvMUIFGP54+9t4qri2XJlvvU8595GkNid7GVPz5iLO285tnBHj/GklyAxBgYRFgMgycrAw8TA0MDKDhYDGQsAkXbJcWAAAAA=```"
-            ), "Probability": 20 },
-            {"Asset" : AssetManager.addCustomAsset(
+            ), "density": 10 },
+            {"asset" : AssetManager.addCustomAsset(
                 "Tree3",
                 "```H4sIAAAAAAAACzv369xFJgZmBgYGV8sOe+Zcb6+FuwOFhA/vvMUIFGP54+9t4qri2XJlvvU8595GJqDYnexlT8+YiztvObZwR4/xpJcgdQwMMmwGQJKbQYRFgMGBkZOBB6i0gZUbLAcyHgDnC+eKaAAAAA==```"
-            ), "Probability": 15 },
-            {"Asset" : "3dae85f6-7870-4751-8e14-9a07e15cdb4b", "Probability": 10},
-            {"Asset" : "3f883945-6d03-4a4b-a1bb-511213c3b9da", "Probability": 10},
-            {"Asset" : "451e9727-bc73-462c-8c46-512687e6e170", "Probability": 10},
-            {"Asset" : "6665514a-cf77-4cab-ad3c-457a924a68d9", "Probability": 5},
-            {"Asset" : "6b9e66b5-2b8c-4ccf-a4e0-53acb0d8a273", "Probability": 5},
-            {"Asset" : "923bc5e3-a845-403f-93dd-035dbd276279", "Probability": 5},
-            {"Asset" : "e7ad17da-7bd9-47d1-be33-46b0c1bc637f", "Probability": 2}
-        ]
+            ), "density": 10 },
+            {"asset" : "28b95682-24d4-48c1-ae40-c5f02404c9b1", "density": 5},
+            {"asset" : "3dae85f6-7870-4751-8e14-9a07e15cdb4b", "density": 5},
+            {"asset" : "3f883945-6d03-4a4b-a1bb-511213c3b9da", "density": 5},
+            {"asset" : "451e9727-bc73-462c-8c46-512687e6e170", "density": 5},
+            {"asset" : "6665514a-cf77-4cab-ad3c-457a924a68d9", "density": 5},
+            {"asset" : "6b9e66b5-2b8c-4ccf-a4e0-53acb0d8a273", "density": 5},
+            {"asset" : "923bc5e3-a845-403f-93dd-035dbd276279", "density": 10},
+            {"asset" : "e7ad17da-7bd9-47d1-be33-46b0c1bc637f", "density": 10}
+        ], True)
 
-        output = self.generator.generate(groundAssets, placeObjects)
+        placeObjects2 = Generator.createObjectList([
+            {"asset" : AssetManager.addCustomAsset(
+                "Tree1",
+                "```H4sIAAAAAAAACzv369xFJgYmBgYGV8sOe+Zcb6+FuwOFhA/vvMUIFLuTvezpGXNx5y3HFu7oMZ70EiTGwMDBpAAk+RlgAAD5Z/KyRAAAAA==```"
+            ), "density": 50 },
+        ], True)
+
+        output = self.generator.generate(groundAssets, placeObjects1)
 
         generatedOutput = ConversionManager.encode(output).decode("utf-8") 
 
+        pc.copy(generatedOutput)
         self.assertTrue(
             expected,
             generatedOutput
