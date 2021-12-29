@@ -1,5 +1,5 @@
 import unittest
-from classes.quad import Quad
+from objects.quad import Quad
 
 class TestQuad(unittest.TestCase):
     

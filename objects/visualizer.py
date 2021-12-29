@@ -2,17 +2,17 @@ import numpy
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-from classes.config import config as Config
+from objects.config import config as Config
 
 DEFAULT_CMAP = Config.get('visualizer', 'cmap')
 
-class Vizualizer():
+class Visualizer():
 
-    def showImage(image, clip01 = True) -> None:
+    def showImage(image, clipping = True, min = 0, max = 1) -> None:
         plt.imshow(image, cmap=DEFAULT_CMAP, interpolation='None')
 
-        if clip01:
-            plt.clim(0,100)
+        if clipping:
+            plt.clim(min,max)
 
         plt.colorbar()
         plt.show()

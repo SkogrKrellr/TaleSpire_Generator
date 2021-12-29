@@ -1,12 +1,11 @@
 import json
 from os import name
 
-from classes.asset import Asset
-from classes.assetManager import AssetManager
-from classes.prop import Prop
-from classes.tile import Tile
-from classes.customAsset import CustomAsset
-from classes.database import Database
+from database.database import Database
+from objects.asset import Asset
+from objects.assetManager import AssetManager
+from objects.prop import Prop
+from objects.tile import Tile
 
 def FirstTimeSetup() -> None:
     CreateTables()

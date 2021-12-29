@@ -1,6 +1,6 @@
 import uuid as UUID
-from classes.quad import Quad
-from classes.config import config as Config
+from objects.quad import Quad
+from objects.config import config as Config
 from converter.conversionManager import ConversionManager
 
 TABLE_NAME = DATABASE_NAME = Config.get('tableName', 'assets')
@@ -17,7 +17,7 @@ class Asset:
         
         keys = object.keys()
 
-        self.uuid = object["UUID"] if "UUID" in keys else UUID.uuid4()
+        self.uuid = object["UUID"] if "UUID" in keys else str(UUID.uuid4()).lower()
         self.assetName =  object["AssetName"] if "AssetName" in keys else "_".join(object["Name"].split())
 
         self.position = Quad(
@@ -53,10 +53,9 @@ class Asset:
             object["mExtent"]["y"],
             object["mExtent"]["z"],
             object["mExtent"]["w"]
-        ) if "mExtent" in keys else Quad(0, 0, 0, 0)        
+        ) if "mExtent" in keys else Quad(0, 0, 0, 0)
 
 # Miscellaneous
-
     def __str__(self) -> str:
         output = f"""
         UUID: {self.uuid}

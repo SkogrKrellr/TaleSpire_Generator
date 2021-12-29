@@ -1,9 +1,9 @@
 import json
-from classes.asset import Asset
-from classes.tile import Tile
-from classes.prop import Prop
-from classes.customAsset import CustomAsset
-from classes.database import Database
+from objects.asset import Asset
+from objects.tile import Tile
+from objects.prop import Prop
+from objects.customAsset import CustomAsset
+from database.database import Database
 from converter.conversionManager import ConversionManager
 
 class AssetManager():
@@ -11,9 +11,9 @@ class AssetManager():
     def __init__ (self):
         pass
 
-    def getAsset( uuid ):
+    def getAsset( uuid, name = None ):
         database = Database()
-        object = database.fetchall(Asset.SqlGetAsset(uuid))
+        object = database.fetchall(Asset.SqlGetAsset(str(uuid).lower()))
         assetDictionary = AssetManager.remap(object[0], True)
         className= globals()[assetDictionary["Type"]]
         

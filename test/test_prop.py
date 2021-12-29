@@ -1,7 +1,7 @@
 import unittest
 import json
-from classes.assetManager import AssetManager
-from classes.prop import Prop
+from objects.assetManager import AssetManager
+from objects.prop import Prop
 
 class TestProp(unittest.TestCase):
     

@@ -1,5 +1,5 @@
 import sqlite3
-from classes.config import config as Config
+from objects.config import config as Config
 
 DATABASE_NAME = Config.get('database', 'name')
 

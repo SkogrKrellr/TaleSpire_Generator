@@ -1,7 +1,7 @@
-from utils import *
-import json
-import gzip
 import base64
+import gzip
+import json
+from utils import *
 
 HEADER = b'\xCE\xFA\xCE\xD1\x02\x00'
 PADDING = b'\x00\x00'

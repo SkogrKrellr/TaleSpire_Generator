@@ -1,5 +1,5 @@
-from converter.encode import encode
-from converter.decode import decode
+from .encode import encode
+from .decode import decode
 
 class ConversionManager():
 

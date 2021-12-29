@@ -1,5 +1,5 @@
-from classes.config import *
-from classes.asset import Asset
+from objects.config import *
+from objects.asset import Asset
 
 class Prop(Asset):
     
