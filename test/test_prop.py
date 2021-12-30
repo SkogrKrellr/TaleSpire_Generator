@@ -3,11 +3,12 @@ import json
 from objects.assetManager import AssetManager
 from objects.prop import Prop
 
+
 class TestProp(unittest.TestCase):
     
     @classmethod
     def setUpClass(self) -> None:
-        print("\nProp: " ,end = '')
+        print("\nProp: ", end='')
         self.maxDiff = None
         self.prop = Prop(
             AssetManager.remap(json.loads(
@@ -33,4 +34,3 @@ class TestProp(unittest.TestCase):
             expected,
             self.prop.__str__()
         )
-        

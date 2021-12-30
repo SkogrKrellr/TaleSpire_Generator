@@ -9,19 +9,20 @@ DEFAULT_HEIGHT_BASED_MULTIPLIER = float(Config.get('placeObjectSettings', 'heigh
 DEFAULT_HEIGHT_BASED_OFFSET = float(Config.get('placeObjectSettings', 'height_based_offset'))
 DEFAULT_RANDOM_NOISE_WEIGHT = float(Config.get('placeObjectSettings', 'random_noise_weight'))
 
+
 class PlaceObjectSettings(Settings):
 
     def __init__(self, passedSettings):
         Settings.__init__(self, passedSettings)
         keys = passedSettings.keys()
         self.params.update({
-            "density" : passedSettings['density']  if 'density' in keys else DEFAULT_DENSITY,
-            "clumping" : passedSettings['clumping'] if 'clumping' in keys else DEFAULT_CLUMPING,
-            "randomNoiseWeight" : passedSettings['randomNoiseWeight'] if 'randomNoiseWeight' in keys else DEFAULT_RANDOM_NOISE_WEIGHT,
+            "density": passedSettings['density'] if 'density' in keys else DEFAULT_DENSITY,
+            "clumping": passedSettings['clumping'] if 'clumping' in keys else DEFAULT_CLUMPING,
+            "randomNoiseWeight": passedSettings['randomNoiseWeight'] if 'randomNoiseWeight' in keys else DEFAULT_RANDOM_NOISE_WEIGHT,
 
-            "randomNudgeEnabled" : passedSettings['randomNudge'] if 'randomNudge' in keys else DEFAULT_RANDOM_NUDGE_ENABLED,
-            "randomRotationEnabled" : passedSettings['randomRotation'] if 'randomRotation' in keys else DEFAULT_RANDOM_ROTATION_ENABLED,
+            "randomNudgeEnabled": passedSettings['randomNudge'] if 'randomNudge' in keys else DEFAULT_RANDOM_NUDGE_ENABLED,
+            "randomRotationEnabled": passedSettings['randomRotation'] if 'randomRotation' in keys else DEFAULT_RANDOM_ROTATION_ENABLED,
 
-            "heightBasedMultiplier" : passedSettings['heightBasedMultiplier'] if 'heightBasedMultiplier' in keys else DEFAULT_HEIGHT_BASED_MULTIPLIER,
-            "heightBasedOffset" : passedSettings['heightBasedOffset'] if 'heightBasedOffset' in keys else DEFAULT_HEIGHT_BASED_OFFSET
+            "heightBasedMultiplier": passedSettings['heightBasedMultiplier'] if 'heightBasedMultiplier' in keys else DEFAULT_HEIGHT_BASED_MULTIPLIER,
+            "heightBasedOffset": passedSettings['heightBasedOffset'] if 'heightBasedOffset' in keys else DEFAULT_HEIGHT_BASED_OFFSET
         })

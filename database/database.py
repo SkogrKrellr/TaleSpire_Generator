@@ -3,8 +3,9 @@ from objects.config import config as Config
 
 DATABASE_NAME = Config.get('database', 'name')
 
+
 class Database:
-    
+
     def __init__(self) -> None:
         self.connection = sqlite3.connect(f"{DATABASE_NAME}.db")
         self.cursor = self.connection.cursor()
@@ -16,7 +17,7 @@ class Database:
     def executeScript(self, script):
         self.cursor.executescript(script)
         self.connection.commit()
-    
+
     def execute(self, query):
         self.cursor.execute(query)
         self.connection.commit()

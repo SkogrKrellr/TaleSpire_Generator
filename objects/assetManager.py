@@ -6,30 +6,30 @@ from objects.customAsset import CustomAsset
 from database.database import Database
 from converter.conversionManager import ConversionManager
 
+
 class AssetManager():
 
-    def __init__ (self):
+    def __init__(self):
         pass
 
-    def getAsset( uuid, name = None ):
+    def getAsset(uuid, name=None):
         database = Database()
         object = database.fetchall(Asset.SqlGetAsset(str(uuid).lower()))
         assetDictionary = AssetManager.remap(object[0], True)
-        className= globals()[assetDictionary["Type"]]
-        
+        className = globals()[assetDictionary["Type"]]
+
         asset = className(assetDictionary)
         return asset
 
-    def addCustomAsset( name, string ):
+    def addCustomAsset(name, string):
         database = Database()
 
-        customAsset = CustomAsset( {
+        customAsset = CustomAsset({
             "Name": name,
             "String": string
         })
 
         database.execute(customAsset.SqlValues())
-        
         return customAsset.uuid
 
     def remap(object, fromDB=False):
@@ -40,14 +40,14 @@ class AssetManager():
             "mCenter": {},
             "mExtent": {}
         }
-        
-        if fromDB :
+
+        if fromDB:
             result["UUID"] = object[0]
             result["Type"] = object[1]
             result["Name"] = object[2]
             result["AssetName"] = object[3]
             result["String"] = object[4]
-            
+
             result["Position"]["x"] = object[5]
             result["Position"]["y"] = object[6]
             result["Position"]["z"] = object[7]
@@ -74,12 +74,12 @@ class AssetManager():
             result["mExtent"]["w"] = object[24]
 
             return result
-        
+
         result["UUID"] = object["Id"]
         result["Name"] = object["Name"]
         result["AssetName"] = object["Assets"][0]["LoaderData"]["AssetName"]
         result["String"] = ""
-        
+
         result["Position"]["x"] = object["Assets"][0]["Position"]["x"]
         result["Position"]["y"] = object["Assets"][0]["Position"]["y"]
         result["Position"]["z"] = object["Assets"][0]["Position"]["z"]
@@ -107,7 +107,7 @@ class AssetManager():
 
         return result
 
-    def getAssetList( assetList ):
+    def getAssetList(assetList):
         assets = []
         for asset in assetList:
             assets.append(AssetManager.getAsset(asset.params["asset"]))

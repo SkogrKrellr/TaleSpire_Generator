@@ -2,12 +2,13 @@ import unittest
 import json
 from objects.assetManager import AssetManager
 
+
 class TestAssetManager(unittest.TestCase):
-    
+
     @classmethod
     def setUpClass(self) -> None:
         self.maxDiff = None
-        print("\nAssetManager: " ,end = '')
+        print("\nAssetManager: ", end='')
 
     def test_getAsset(self):
         expected = f"""
@@ -27,7 +28,7 @@ class TestAssetManager(unittest.TestCase):
         result = object.__str__()
 
         self.assertMultiLineEqual(
-            result, 
+            result,
             expected
         )
 
@@ -37,7 +38,7 @@ class TestAssetManager(unittest.TestCase):
             "Tree",
             "```H4sIAAAAAAAACzv369xFJgZmBgaGe57nRebNPO24TLyae47AxiWMQDFXyw575lxvr4W7A4WED++8BRK7k73s6Rlzcectxxbu6DGe9BIkxsrAwZTAwMDMyCDAAuSCjGNoYGgASgEAg5LcWWAAAAA=```"
         )
-        
+
         expected = f"""
         UUID: {customAssetUUID}
         Name: Tree
@@ -54,7 +55,7 @@ class TestAssetManager(unittest.TestCase):
         result = object.__str__()
 
         self.assertMultiLineEqual(
-            result, 
+            result,
             expected
         )
 
@@ -66,11 +67,17 @@ class TestAssetManager(unittest.TestCase):
         )
         asset = AssetManager.getAsset(customAssetUUID)
         result = asset.getDecoded()
-        
+
         expected = [
-            {'uuid': '14CF49DE-999E-41CB-A617-7B0B9C10B1A4', 'instance_count': 1, 'instances': [{'x': 0, 'y': 2, 'z': 130, 'rot': 0}]},
-            {'uuid': '3F883945-6D03-4A4B-A1BB-511213C3B9DA', 'instance_count': 1, 'instances': [{'x': 4, 'y': 8, 'z': 260, 'rot': 0}]}, 
-            {'uuid': 'E5A66BDC-37CC-4317-B4C6-A1B88C3392E9', 'instance_count': 1, 'instances': [{'x': 5, 'y': 0, 'z': 0, 'rot': 270}]},
+            {'uuid': '14CF49DE-999E-41CB-A617-7B0B9C10B1A4',
+                'instance_count': 1,
+                'instances': [{'x': 0, 'y': 2, 'z': 130, 'rot': 0}]},
+            {'uuid': '3F883945-6D03-4A4B-A1BB-511213C3B9DA',
+                'instance_count': 1,
+                'instances': [{'x': 4, 'y': 8, 'z': 260, 'rot': 0}]},
+            {'uuid': 'E5A66BDC-37CC-4317-B4C6-A1B88C3392E9',
+                'instance_count': 1,
+                'instances': [{'x': 5, 'y': 0, 'z': 0, 'rot': 270}]},
         ]
 
         self.assertListEqual(

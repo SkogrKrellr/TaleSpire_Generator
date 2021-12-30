@@ -2,7 +2,7 @@
 class Quad:
 
     def __init__(
-        self, 
+        self,
         x: float = 0.0,
         y: float = 0.0,
         z: float = 0.0,
@@ -27,5 +27,9 @@ class Quad:
     def SqlFieldNames(prefix="") -> str:
         return f"{prefix}_x, {prefix}_y, {prefix}_z, {prefix}_w"
 
-    def SqlCreateTable(prefix = "") -> str:
-        return f"{prefix}_x FLOAT(24), {prefix}_y FLOAT(24), {prefix}_z FLOAT(24), {prefix}_w FLOAT(24)"
+    def SqlCreateTable(prefix="") -> str:
+        return f"""
+        {prefix}_x FLOAT(24),
+        {prefix}_y FLOAT(24),
+        {prefix}_z FLOAT(24),
+        {prefix}_w FLOAT(24)"""

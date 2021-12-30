@@ -7,17 +7,19 @@ from objects.assetManager import AssetManager
 from objects.prop import Prop
 from objects.tile import Tile
 
+
 def FirstTimeSetup() -> None:
     CreateTables()
     populateAssets()
 
+
 def CreateTables():
     database = Database()
 
-    database.execute( Asset.SqlDropTable() )
-    database.execute( Asset.SqlCreateTable() )
-
+    database.execute(Asset.SqlDropTable())
+    database.execute(Asset.SqlCreateTable())
     database.close()
+
 
 def populateAssets():
 
@@ -32,7 +34,7 @@ def populateAssets():
     for object in objects["Tiles"]:
         tile = Tile(AssetManager.remap(object))
         sqlQuerry += tile.SqlValues()
-        
+
     for object in objects["Props"]:
         prop = Prop(AssetManager.remap(object))
         sqlQuerry += prop.SqlValues()

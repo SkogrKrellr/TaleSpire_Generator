@@ -1,19 +1,17 @@
-import re, json, math, numpy
-from unittest.signals import registerResult
+import json
+import math
+import numpy
 import pyperclip as pc
 from opensimplex import OpenSimplex
 
 from objects.asset import Asset
 from objects.tile import Tile
 from objects.assetManager import AssetManager
-from objects.customAsset import CustomAsset 
+from objects.customAsset import CustomAsset
 from objects.visualizer import Visualizer
 from objects.config import config as Config
-
 from converter.conversionManager import ConversionManager
-
 from generator.noise import Noise
-
 from settings.placeObjectSettings import PlaceObjectSettings
 from settings.terrainSettings import TerrainSettings
 
@@ -24,18 +22,17 @@ DEFAULT_EXP = float(Config.get('generator', 'default_exponent'))
 DEFAULTSEED = int(Config.get('generator', 'seed'))
 DEFAULT_USE_RIDGE_NOISE = bool(Config.getboolean('generator', 'useRidgeNoise'))
 USE_HEIGHT_ASSET_SPREAD = bool(Config.getboolean('generator', 'heightBasedAssetSpread'))
-
 PRECISE_HEIGHT = bool(Config.getboolean('generator', 'preciseHeight'))
 
 REALY_BIG_NUMBER = 20000
 
+
 class Generator:
 
-    settings = {
-        "useRidgeNoise" : DEFAULT_USE_RIDGE_NOISE,
-        "preciseHeight" : PRECISE_HEIGHT,
-        "heightBasedTerrainAssetPlacement" : USE_HEIGHT_ASSET_SPREAD,
-    }
+    settings = {"useRidgeNoise": DEFAULT_USE_RIDGE_NOISE,
+                "preciseHeight": PRECISE_HEIGHT,
+                "heightBasedPlacement": USE_HEIGHT_ASSET_SPREAD,
+                }
 
     def __init__(self):
         self.setXYZ(DEFAULT_X, DEFAULT_Y, DEFAULT_Z)
@@ -46,37 +43,40 @@ class Generator:
         self.setTileSize()
 
 # Setters / Getters
-    def setXYZ (self, x, y, z):
+    def setXYZ(self, x, y, z):
         self.x = max(x, 1)
         self.y = max(y, 1)
         self.z = max(z, 1)
         self.elevation = numpy.zeros((self.x, self.y))
         self.placeObjectZ = numpy.zeros((self.x, self.y))
 
-    def setOctaves (self, *args):
+    def setOctaves(self, *args):
         self.noise.setOctaves(*args)
 
-    def setScales (self, *args):
+    def setScales(self, *args):
         self.noise.setScales(*args)
 
-    def setExponent (self, exponent):
+    def setExponent(self, exponent):
         self.exponent = float(exponent)
 
-    def setSeed (self, seed):
+    def setSeed(self, seed):
         self.noise = Noise(seed)
 
-    def setTileSize(self, tileSize = 0):
+    def setTileSize(self, tileSize=0):
         self.tileSize = max(tileSize, 0)
 
-    def setUseRidgeNoise(self, useRidgeNoise = DEFAULT_USE_RIDGE_NOISE):
+    def setUseRidgeNoise(self, useRidgeNoise=DEFAULT_USE_RIDGE_NOISE):
         self.settings["useRidgeNoise"] = bool(useRidgeNoise)
 
-    def setUsePreciseHeight(self, usePreiceNoise = PRECISE_HEIGHT):
-        self.settings["useRidgeNoise"]  = bool(usePreiceNoise)
+    def setUsePreciseHeight(self, usePreiceNoise=PRECISE_HEIGHT):
+        self.settings["useRidgeNoise"] = bool(usePreiceNoise)
 
-    def setUseHeightBasedTerrainAssetPlacement (self, useHeightBasedTerrainAssetPlacement = USE_HEIGHT_ASSET_SPREAD):
-        self.settings["heightBasedTerrainAssetPlacement"] = bool(useHeightBasedTerrainAssetPlacement)
-    
+    def setUseHeightBasedTerrainAssetPlacement(
+        self,
+        useHeightBasedPlacement=USE_HEIGHT_ASSET_SPREAD
+    ):
+        self.settings["heightBasedPlacement"] = bool(useHeightBasedPlacement)
+
     def initializeOutput(self):
         self.output = {
             "unique_asset_count": 0,
@@ -84,67 +84,68 @@ class Generator:
         }
 
     def getPos(self, x, y, z):
-        return math.ceil( self.elevation[x][y] / z )
+        return math.ceil(self.elevation[x][y] / z)
 
 # Misc Math
     def calculateNewCoordinates(self, placement, rot, asset):
-
-        offset = { "x" : 0, "y" : 0 }
+        offset = {
+            "x": 0,
+            "y": 0
+        }
         angle = 0
 
         cos = round(math.cos(math.radians(rot)))
         sin = round(math.sin(math.radians(rot)))
-     
-        axis = { 
-            "x" : { "x" : cos,   "y" : sin},
-            "y" : { "x" : -sin,  "y" : cos}
+
+        axis = {
+            "x": {"x": cos, "y": sin},
+            "y": {"x": -sin, "y": cos}
         }
 
-        if rot % 180 == 90: angle = 180
+        if rot % 180 == 90:
+            angle = 180
 
-        angle += ( rot + placement["rot"] ) % 360
-    
+        angle += (rot + placement["rot"]) % 360
+
         if type(asset) is Tile:
             if rot == 90:
-                if angle %180 == 90:
+                if angle % 180 == 90:
                     offset["x"] = -asset.mExtent.z*2
-                if angle %180 == 0:
+                if angle % 180 == 0:
                     offset["x"] = -asset.mExtent.x*2
-            
             if rot == 180:
-                if angle %180 == 90:
+                if angle % 180 == 90:
                     offset["x"] = -asset.mExtent.z*2
                     offset["y"] = -asset.mExtent.x*2
-                if angle %180 == 0:
+                if angle % 180 == 0:
                     offset["x"] = -asset.mExtent.x*2
                     offset["y"] = -asset.mExtent.z*2
-            
             if rot == 270:
-                if angle %180 == 90:
+                if angle % 180 == 90:
                     offset["y"] = -asset.mExtent.x*2
-                if angle %180 == 0:
+                if angle % 180 == 0:
                     offset["y"] = -asset.mExtent.z*2
 
-        newPlacement = {
-            "x" : placement["x"]/100,
-            "y" : placement["y"]/100,
-            "z" : placement["z"]/100
+        new = {
+            "x": placement["x"]/100,
+            "y": placement["y"]/100,
+            "z": placement["z"]/100
         }
 
         return (
-            (newPlacement['x'] * axis["x"]["x"]) + (newPlacement['y'] * axis["y"]["x"]) + offset["x"],
-            (newPlacement['y'] * axis["y"]["y"]) + (newPlacement['x'] * axis["x"]["y"]) + offset["y"],  
-            newPlacement['z'],
-            angle 
+            new["x"] * axis["x"]["x"] + new["y"] * axis["y"]["x"] + offset["x"],
+            new["y"] * axis["y"]["y"] + new["x"] * axis["x"]["y"] + offset["y"],
+            new["z"],
+            angle
         )
 
     def adaptiveThickness(self, x, y, z) -> int:
         current = self.getPos(x, y, z)
-        return int(max( 
-            current - self.getPos( x, max(y-1, 0), z)+1,
-            current - self.getPos( x, min(y+1, self.y-1), z)+1,
-            current - self.getPos( max(x-1, 0), y, z)+1,
-            current - self.getPos( min(x+1, self.x-1), y, z)+1,
+        return int(max(
+            current - self.getPos(x, max(y-1, 0), z)+1,
+            current - self.getPos(x, min(y+1, self.y-1), z)+1,
+            current - self.getPos(max(x-1, 0), y, z)+1,
+            current - self.getPos(min(x+1, self.x-1), y, z)+1,
             1
         ))
 
@@ -159,69 +160,82 @@ class Generator:
         self.elevation **= self.exponent
 
 # Generation
-    def generate(self, terrainAssets = [], placeObjects = [], sizes = [1,1]):
+    def generate(
+        self,
+        terrainAssets=[],
+        placeObjects=[],
+        sizes=[1, 1]
+    ):
         result = []
 
         for x in range(sizes[0]):
             for y in range(sizes[1]):
                 self.initializeOutput
                 output = self.generatePart(
-                    terrainAssets, 
-                    placeObjects, 
-                    [ x * self.x, y * self.y]
-                ) 
+                    terrainAssets,
+                    placeObjects,
+                    [x * self.x, y * self.y]
+                )
                 result.append({
-                    "x" : x,
-                    "y" : y,
-                    "output" : output
+                    "x": x,
+                    "y": y,
+                    "output": output
                 })
 
         return result
 
-    def generatePart(self, terrainAssets, placeObjects, offset = [0,0]):
+    def generatePart(
+        self,
+        terrainAssets,
+        placeObjects,
+        offset=[0, 0]
+    ):
         self.initializeOutput()
         self.generateElevation(offset)
         self.powerElevation()
         self.multiplyByValue()
-        self.populateElevation(terrainAssets) 
-        self.populatePlaceObjects(placeObjects) 
+        self.populateElevation(terrainAssets)
+        self.populatePlaceObjects(placeObjects)
         string = json.dumps(self.output)
         return ConversionManager.encode(string).decode("utf-8")
 
-    def generateElevation (self, offset = [0, 0]) -> None:
+    def generateElevation(
+        self,
+        offset=[0, 0]
+    ):
         self.elevation = self.noise.generateComplexNoiseArray(
             self.x,
             self.y,
-            useRidgeNoise = self.settings["useRidgeNoise"],
+            useRidgeNoise=self.settings["useRidgeNoise"],
             offset=offset
         )
 
-# Placement 
+# Placement
     def place(self, asset, x, y, z, rot):
         # padding for when rotation places tiles outside bounds
         x += 5
         y += 5
 
         if type(asset) is CustomAsset:
-            self.placeCustom( asset, x, y, z, rot)
+            self.placeCustom(asset, x, y, z, rot)
         else:
-            self.placeAsset( asset.uuid, x, y, z, rot)
-        
+            self.placeAsset(asset.uuid, x, y, z, rot)
+
     def placeAsset(self, uuid, x, y, z, rot):
-        if not uuid in self.output['asset_data'].keys():
+        if uuid not in self.output['asset_data'].keys():
             self.output['asset_data'][uuid] = {
-                "uuid" : uuid,
-                "instance_count" : 0,
-                "instances" : []
+                "uuid": uuid,
+                "instance_count": 0,
+                "instances": []
             }
-        
+
         self.output['asset_data'][uuid]['instances'].append({
-            "x" : x * 100,
-            "y" : y * 100,
-            "z" : z * 100,
-            "rot" : rot
+            "x": x * 100,
+            "y": y * 100,
+            "z": z * 100,
+            "rot": rot
         })
-    
+
     def placeCustom(self, asset, x, y, z, rot):
         dictionary = asset.getDecoded()
         coordinates = []
@@ -235,7 +249,7 @@ class Generator:
             placeAsset = AssetManager.getAsset(item["uuid"])
             for placement in item["instances"]:
                 newX, newY, newZ, angle = self.calculateNewCoordinates(
-                    placement,    
+                    placement,
                     rot,
                     placeAsset
                 )
@@ -244,11 +258,11 @@ class Generator:
                 minimum["y"] = min(newY, minimum["y"])
 
                 coordinates.append({
-                    "uuid" : item["uuid"],
-                    "x" : newX + x, 
-                    "y" : newY + y, 
-                    "z" : newZ + z, 
-                    "rot" : angle
+                    "uuid": item["uuid"],
+                    "x": newX + x,
+                    "y": newY + y,
+                    "z": newZ + z,
+                    "rot": angle
                 })
 
         for coord in coordinates:
@@ -267,9 +281,14 @@ class Generator:
 # Helpers
     def compilePlaceObjectNoiseMap(self, settings, position):
         noiseMap = self.noise.getRandomNoiseMap(
-                { "x" : self.x * int(self.tileSize), 
-                  "y" : self.y * int(self.tileSize)},
-                [7**(position+2), 7**(position+2)],  # Offset so that each asset would have a unique noise map
+                {
+                    "x": self.x * int(self.tileSize),
+                    "y": self.y * int(self.tileSize)
+                },
+                [  # Offset so that each asset would have a unique noise map
+                    7**(position+2),
+                    7**(position+2)
+                ],
                 settings["clumping"],
                 settings["randomNoiseWeight"],
                 )
@@ -277,78 +296,84 @@ class Generator:
         for x in range(0, self.x * int(self.tileSize)):
             for y in range(0, self.y * int(self.tileSize)):
                 if settings["heightBasedMultiplier"] >= 0:
-                    noiseMap[x][y] += self.elevation[math.floor(x / self.tileSize)][math.floor(y / self.tileSize)] 
-                    noiseMap[x][y] *= settings["heightBasedMultiplier"] 
+                    scaledX = math.floor(x / self.tileSize)
+                    scaledY = math.floor(y / self.tileSize)
+                    noiseMap[x][y] += self.elevation[scaledX][scaledY]
+                    noiseMap[x][y] *= settings["heightBasedMultiplier"]
                     noiseMap[x][y] += settings["heightBasedOffset"]
 
                 if noiseMap[x][y] <= settings["density"]:
                     noiseMap[x][y] = 1.0
                 else:
                     noiseMap[x][y] = 0.0
-        
         return noiseMap
 
-    def createObjectList(list, placeObjects = False):
+    def createObjectList(list, placeObjects=False):
         resultingList = []
         for item in list:
-            resultingList.append(
-                PlaceObjectSettings(item) if placeObjects else TerrainSettings(item)
-                )
-                
+            if placeObjects:
+                resultingList.append(PlaceObjectSettings(item))
+            else:
+                resultingList.append(TerrainSettings(item))
         return resultingList
 
     def createHeightColorMap(self, assetList):
         map = []
 
-        if  self.settings["heightBasedTerrainAssetPlacement"]:
+        if self.settings["heightBasedPlacement"]:
             for x in range(101):
                 map.append([])
             for position, asset in enumerate(assetList):
                 map[int(asset.getParam("heightMax"))].append(position)
-            for x in range(100,0,-1): # Fill empty spaces from top to bottom
-                if map[x-1] == [] :
-                    map[x-1]=map[x]
-            for x in range(101): # Fill empty spaces from bottom to top
+            for x in range(100, 0, -1):  # Fill empty spaces from top to bottom
+                if map[x-1] == []:
+                    map[x-1] = map[x]
+            for x in range(101):  # Fill empty spaces from bottom to top
                 if map[x] == []:
-                    map[x]=map[x-1]
+                    map[x] = map[x-1]
             return map, 100
 
-        SumOfProbabilities = 0
+        sum = 0
         for position, asset in enumerate(assetList):
             map.append({
-                    "asset" : asset.getParam("asset"), 
-                    "probability" : SumOfProbabilities + asset.getParam("densityMax"), 
-                    "probabilityPrev": SumOfProbabilities
+                    "asset": asset.getParam("asset"),
+                    "prob": sum + asset.getParam("densityMax"),
+                    "probPrev": sum
                 })
-            SumOfProbabilities += asset.getParam("densityMax")
-                
-        return map, SumOfProbabilities
+            sum += asset.getParam("densityMax")
+        return map, sum
 
-    def getAssetFromMap(self, map, mapSize, x, y, maximum, assetList, assets):
-        if self.settings["heightBasedTerrainAssetPlacement"]:
-            relativeHeight = int( self.elevation[x][y] / maximum * 100)
+    def getAssetFromMap(
+        self,
+        map,
+        mapSize,
+        x,
+        y,
+        maximum,
+        assetList,
+        assets
+    ):
+        if self.settings["heightBasedPlacement"]:
+            relativeHeight = int(self.elevation[x][y] / maximum * 100)
             settings = assetList[map[relativeHeight][0]].getParam()
 
             if settings["blendHeightMultiplier"] > 0:
                 relativeHeight += numpy.random.randint(
-                    low=-settings["blendHeightMultiplier"], 
+                    low=-settings["blendHeightMultiplier"],
                     high=settings["blendHeightMultiplier"])
                 relativeHeight = max(min(100, relativeHeight), 0)
 
             return assets[map[relativeHeight][0]]
 
-        randomNumber = numpy.random.randint(mapSize-1)
+        random = numpy.random.randint(mapSize-1)
         placeAsset = ""
         for item in map:
-            if randomNumber >= item["probabilityPrev"] and randomNumber < item["probability"]:
+            if random >= item["probPrev"] and random < item["prob"]:
                 placeAsset = item["asset"]
                 break
         for asset in assets:
             if asset.uuid == placeAsset:
                 return asset
-    
-        
-        
 
 # Asset placement
     def populateElevation(self, assetList):
@@ -359,28 +384,28 @@ class Generator:
             size = max(asset.mExtent.x, asset.mExtent.z)*2.0
             if self.tileSize < size:
                 self.setTileSize(size)
-                
+
         maximumHeight = numpy.amax(self.elevation)
 
         for x in range(0, self.x):
             for y in range(0, self.y):
-                
+
                 asset = self.getAssetFromMap(
                             map,
-                            mapSize, 
-                            x, 
-                            y, 
-                            maximumHeight, 
+                            mapSize,
+                            x,
+                            y,
+                            maximumHeight,
                             assetList,
                             assets
                         )
 
                 if self.settings["preciseHeight"] and x == 0 and y == 0:
                     self.place(
-                        asset, 
-                        x * self.tileSize, 
-                        y * self.tileSize, 
-                        0, 
+                        asset,
+                        x * self.tileSize,
+                        y * self.tileSize,
+                        0,
                         numpy.random.randint(4)*90
                         )
 
@@ -389,10 +414,10 @@ class Generator:
 
                 for w in range(0, self.adaptiveThickness(x, y, z)):
                     self.place(
-                        asset, 
-                        x * self.tileSize, 
-                        y * self.tileSize, 
-                        z * ( currentHeight - w ), 
+                        asset,
+                        x * self.tileSize,
+                        y * self.tileSize,
+                        z * (currentHeight - w),
                         numpy.random.randint(4)*90
                         )
 
@@ -400,9 +425,12 @@ class Generator:
 
     def populatePlaceObjects(self, assetList):
         assets = AssetManager.getAssetList(assetList)
-        for position, asset in enumerate(assets):            
+        for position, asset in enumerate(assets):
             assetSettings = assetList[position].getParam()
-            placeObject = self.compilePlaceObjectNoiseMap(assetSettings, position)
+            placeObject = self.compilePlaceObjectNoiseMap(
+                assetSettings,
+                position
+            )
             for x in range(0, self.x * int(self.tileSize)):
                 for y in range(0, self.y * int(self.tileSize)):
                     if placeObject[x][y]:
@@ -420,7 +448,5 @@ class Generator:
                         if assetSettings["randomNudgeEnabled"]:
                             newX += (numpy.random.randint(100)-50)/200
                             newY += (numpy.random.randint(100)-50)/200
-                    
-                        self.place( asset, newX, newY, newZ, newRot)
 
-
+                        self.place(asset, newX, newY, newZ, newRot)

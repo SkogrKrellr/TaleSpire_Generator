@@ -3,12 +3,13 @@ import unittest
 
 from converter.conversionManager import ConversionManager
 
+
 class TestEncodeDecode(unittest.TestCase):
     
     @classmethod
     def setUpClass(self) -> None:
         self.maxDiff = None
-        print("\nEncode/Decode: " ,end = '')
+        print("\nEncode/Decode: ", end='')
         self.encoded = "```H4sIAAAAAAAC/1WRIU8DQRCFh2vSIKpqmlNXU3UnmktFZUV/A0HgQPIjEOeaJidxKBQBjVhBgllMCSRY/kENWYXi3u53pF3zMu/Nm9m82f3uPjLLzOzi9vpxs/1ZP3zt377PtvNFx51+vteXr4v182Rzf/e0n8zt+L2MwTLhaml2hSZcDRPejOBz+AJ+llD+qNfo3RzPHM8eT191knih5gqlR+z1bk5Ln1D/aOlv6Y96jl7Al/CdP6AL9c+AHg50/fM8S3uE2iPUnsjn1J3fwbuDWv7pIPmF0oX6X+Rz+FlC9TeDtKdBb9CF/3cYJtQ8I3cjdyN3O8i7z1c+j8/j8/g8Po/Pc6eKfCvyqsizIreKnFrqljpwn4A/cJ/AfQJzlJ/qmG9fl+Rbwy9TnnqOOzh8jjs4/A6/wz8lz4gF+ZfkX5OzkfOInMfcoUCnT/8w+wPbqNAXVAMAAA==```"
 
         self.decoded = {
@@ -130,14 +131,11 @@ class TestEncodeDecode(unittest.TestCase):
         }
 
     def test_encode(self) -> None:
-        generated = ConversionManager.encode(json.dumps(self.decoded)).decode('ascii')
+        generated = ConversionManager.encode(
+            json.dumps(self.decoded)
+            ).decode('ascii')
         self.assertEqual(generated, self.encoded)
 
     def atest_decode(self):
         output = ConversionManager.decode(self.encoded)
         self.assertDictEqual(self.decoded, output)
-
-
-
-        
-

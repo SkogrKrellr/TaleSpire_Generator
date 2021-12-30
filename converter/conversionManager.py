@@ -1,13 +1,13 @@
 from .encode import encode
 from .decode import decode
 
-class ConversionManager():
 
-    def __init__ (self):
+class ConversionManager():
+    def __init__(self):
         pass
 
-    def decode( data ):
+    def decode(data):
         return decode(data)
 
-    def encode( data ):
+    def encode(data):
         return encode(data)

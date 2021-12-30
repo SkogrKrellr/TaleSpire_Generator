@@ -3,11 +3,12 @@ import json
 from objects.assetManager import AssetManager
 from objects.tile import Tile
 
+
 class TestTile(unittest.TestCase):
 
     @classmethod
     def setUpClass(self) -> None:
-        print("\nTiles: " ,end = '')
+        print("\nTiles: ", end='')
         self.maxDiff = None
         self.tile = Tile(
             AssetManager.remap(json.loads(

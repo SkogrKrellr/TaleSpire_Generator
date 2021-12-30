@@ -5,27 +5,34 @@ from converter.conversionManager import ConversionManager
 
 TABLE_NAME = DATABASE_NAME = Config.get('tableName', 'assets')
 
+
 class Asset:
 
     def __init__(
         self,
         object
-        ):
-
+    ):
         self.name = object["Name"]
         self.string = object["String"]
-        
+
         keys = object.keys()
 
-        self.uuid = object["UUID"] if "UUID" in keys else str(UUID.uuid4()).lower()
-        self.assetName =  object["AssetName"] if "AssetName" in keys else "_".join(object["Name"].split())
+        if "UUID" in keys:
+            self.uuid = object["UUID"]
+        else:
+            self.uuid = str(UUID.uuid4()).lower()
+
+        if "AssetName" in keys:
+            self.assetName = object["AssetName"]
+        else:
+            self.assetName = "_".join(object["Name"].split())
 
         self.position = Quad(
             object["Position"]["x"],
             object["Position"]["y"],
             object["Position"]["z"],
             object["Position"]["w"]
-        ) if "Position" in keys else Quad(0, 0, 0, 0) 
+        ) if "Position" in keys else Quad(0, 0, 0, 0)
 
         self.rotation = Quad(
             object["Rotation"]["x"],
@@ -39,14 +46,14 @@ class Asset:
             object["Scale"]["y"],
             object["Scale"]["z"],
             object["Scale"]["w"]
-        ) if "Scale" in keys else Quad(0, 0, 0, 0) 
-            
+        ) if "Scale" in keys else Quad(0, 0, 0, 0)
+
         self.mCenter = Quad(
             object["mCenter"]["x"],
             object["mCenter"]["y"],
             object["mCenter"]["z"],
             object["mCenter"]["w"]
-        ) if "mCenter" in keys else Quad(0, 0, 0, 0) 
+        ) if "mCenter" in keys else Quad(0, 0, 0, 0)
 
         self.mExtent = Quad(
             object["mExtent"]["x"],
@@ -74,14 +81,14 @@ class Asset:
 # SQL operations
     def SqlValues(self) -> str:
         output = f"""
-        INSERT INTO {TABLE_NAME} 
+        INSERT INTO {TABLE_NAME}
             VALUES(
                 "{self.uuid}",
-                "{self.__class__.__name__}", 
-                "{self.name}", 
-                "{self.assetName}", 
+                "{self.__class__.__name__}",
+                "{self.name}",
+                "{self.assetName}",
                 "{self.string}",
-                {self.position.SqlValues()}, 
+                {self.position.SqlValues()},
                 {self.rotation.SqlValues()},
                 {self.scale.SqlValues()},
                 {self.mCenter.SqlValues()},
@@ -89,7 +96,7 @@ class Asset:
         );""".strip()
 
         return output
-    
+
     def SqlCreateTable() -> str:
         output = f"""
         CREATE TABLE {TABLE_NAME} (
@@ -106,9 +113,9 @@ class Asset:
         );""".strip()
 
         return output
-    
+
     def SqlDropTable() -> str:
         return f""" DROP TABLE IF EXISTS {TABLE_NAME}; """
-    
+
     def SqlGetAsset(uuid) -> str:
         return f""" SELECT * FROM {TABLE_NAME} WHERE UUID = '{uuid}'; """
