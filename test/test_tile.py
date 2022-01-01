@@ -28,7 +28,7 @@ class TestTile(unittest.TestCase):
         Scale:      x: 1 y: 1 z: 1 w: 0
         mCenter:    x: 0.5 y: 0.25 z: 0.5 w: 0
         mExtent:    x: 0.5 y: 0.25 z: 0.5 w: 0
-        """.strip()
+        """.replace("    ", "").strip()
         self.assertMultiLineEqual(
             expected,
             self.tile.__str__()

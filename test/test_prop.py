@@ -28,7 +28,7 @@ class TestProp(unittest.TestCase):
         Scale:      x: 0.93205726146698 y: 0.93205726146698 z: 0.93205726146698 w: 0
         mCenter:    x: 0 y: 0.3435215950012207 z: 0 w: 0
         mExtent:    x: 0.38203075528144836 y: 0.34022027254104614 z: 0.36165329813957214 w: 0
-        """.strip()
+        """.replace("    ", "").strip()
 
         self.assertMultiLineEqual(
             expected,

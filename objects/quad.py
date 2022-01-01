@@ -21,15 +21,16 @@ class Quad:
         return self.__dict__ == other.__dict__
 
 # SQL operations
-    def SqlValues(self) -> str:
+    def SqlValues(self):
         return f"{self.x}, {self.y}, {self.z}, {self.w}"
 
-    def SqlFieldNames(prefix="") -> str:
+    def SqlFieldNames(prefix=""):
         return f"{prefix}_x, {prefix}_y, {prefix}_z, {prefix}_w"
 
-    def SqlCreateTable(prefix="") -> str:
+    def SqlCreateTable(prefix=""):
         return f"""
         {prefix}_x FLOAT(24),
         {prefix}_y FLOAT(24),
         {prefix}_z FLOAT(24),
-        {prefix}_w FLOAT(24)"""
+        {prefix}_w FLOAT(24)
+        """.replace("    ", "").strip()

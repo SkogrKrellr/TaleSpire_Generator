@@ -6,7 +6,7 @@ DATABASE_NAME = Config.get('database', 'name')
 
 class Database:
 
-    def __init__(self) -> None:
+    def __init__(self):
         self.connection = sqlite3.connect(f"{DATABASE_NAME}.db")
         self.cursor = self.connection.cursor()
 

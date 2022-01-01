@@ -11,24 +11,24 @@ class Noise:
     def __init__(self, seed):
         self.setSeed(seed)
 
-    def setSeed(self, seed) -> None:
+    def setSeed(self, seed):
         self.noise = OpenSimplex(seed)
         numpy.random.seed(seed)
 
-    def setOctaves(self, *args) -> None:
+    def setOctaves(self, *args):
         self.octaves = args
 
-    def setScales(self, *args) -> None:
+    def setScales(self, *args):
         self.scales = args
 
-    def noiseXY(self, x, y) -> float:
+    def noiseXY(self, x, y):
         return self.noise.noise2d(x, y)
 
-    def getNoiseXYValue(self, x, y, wavelength) -> float:
+    def getNoiseXYValue(self, x, y, wavelength):
         value = self.noiseXY(x/wavelength, y/wavelength)
         return (1 + value) * 0.5
 
-    def getRidgeNoiseXY(self, x, y, wavelength) -> float:
+    def getRidgeNoiseXY(self, x, y, wavelength):
         return 2 * (0.5 - abs(0.5 - self.getNoiseXYValue(x, y, wavelength)))
 
     def generateSimpleNoiseArray(
@@ -110,15 +110,19 @@ class Noise:
             offset
         )
 
+        # Set 6 distinct levels of density
+        # 0% 20% 40% 60% 80% 100%
         noiseMap = numpy.around((1.0-noiseMap)*5)/5
 
+        # Then generate randomness to make the edges more fuzzy
         randomMap = numpy.random.random((sizes["x"], sizes["y"]))
 
+        # Then combine them
         noiseMap = (noiseMap * (1-randomWeight)) + (randomMap * randomWeight)
 
+        # Normalize so that values are in range of [0.0, 1.0]
         correctionMin = numpy.amin(noiseMap)
         correctionMax = numpy.amax(noiseMap)
-
         noiseMap -= correctionMin
         noiseMap *= 1.0/(correctionMax-correctionMin)
 

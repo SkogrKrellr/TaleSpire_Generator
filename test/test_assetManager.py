@@ -21,7 +21,7 @@ class TestAssetManager(unittest.TestCase):
         Scale:      x: 1.0 y: 1.0 z: 1.0 w: 0.0
         mCenter:    x: 0.5 y: 0.25 z: 0.5 w: 0.0
         mExtent:    x: 0.5 y: 0.25 z: 0.5 w: 0.0
-        """.strip()
+        """.replace("    ", "").strip()
 
         object = AssetManager.getAsset("32cfd208-c363-4434-b817-8ba59faeed17")
 
@@ -49,7 +49,7 @@ class TestAssetManager(unittest.TestCase):
         Scale:      x: 0.0 y: 0.0 z: 0.0 w: 0.0
         mCenter:    x: 1.281880145072937 y: 1.2120859622955322 z: 0.0 w: 0.0
         mExtent:    x: 1.281880145072937 y: 1.2120859622955322 z: 2.6 w: 0.0
-        """.strip()
+        """.replace("    ", "").strip()
 
         object = AssetManager.getAsset(customAssetUUID)
         result = object.__str__()

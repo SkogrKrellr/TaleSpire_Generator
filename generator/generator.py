@@ -139,7 +139,7 @@ class Generator:
             angle
         )
 
-    def adaptiveThickness(self, x, y, z) -> int:
+    def adaptiveThickness(self, x, y, z):
         current = self.getPos(x, y, z)
         return int(max(
             current - self.getPos(x, max(y-1, 0), z)+1,
@@ -150,14 +150,18 @@ class Generator:
         ))
 
 # Elevation Modifiers
-    def multiplyByValue(self) -> None:
-        self.elevation *= self.z
+    def multiplyByValue(self, value=None):
+        if value is None:
+            value = self.z
+        self.elevation *= value
 
-    def floorElevation(self, steps) -> None:
+    def floorElevation(self, steps):
         self.elevation = numpy.floor(self.elevation*steps)/steps
 
-    def powerElevation(self) -> None:
-        self.elevation **= self.exponent
+    def powerElevation(self, value=None):
+        if value is None:
+            value = self.exponent
+        self.elevation **= value
 
 # Generation
     def generate(
@@ -197,7 +201,7 @@ class Generator:
         self.populateElevation(terrainAssets)
         self.populatePlaceObjects(placeObjects)
         string = json.dumps(self.output)
-        return ConversionManager.encode(string).decode("utf-8")
+        return ConversionManager.encode(string).decode("ascii")
 
     def generateElevation(
         self,
@@ -215,7 +219,6 @@ class Generator:
         # padding for when rotation places tiles outside bounds
         x += 5
         y += 5
-
         if type(asset) is CustomAsset:
             self.placeCustom(asset, x, y, z, rot)
         else:
@@ -337,10 +340,10 @@ class Generator:
         for position, asset in enumerate(assetList):
             map.append({
                     "asset": asset.getParam("asset"),
-                    "prob": sum + asset.getParam("densityMax"),
+                    "prob": sum + asset.getParam("density"),
                     "probPrev": sum
                 })
-            sum += asset.getParam("densityMax")
+            sum += asset.getParam("density")
         return map, sum
 
     def getAssetFromMap(

@@ -74,7 +74,7 @@ class Asset:
         Scale:      {self.scale}
         mCenter:    {self.mCenter}
         mExtent:    {self.mExtent}
-        """.strip()
+        """.replace("    ", "").strip()
 
         return output
 
@@ -93,7 +93,7 @@ class Asset:
                 {self.scale.SqlValues()},
                 {self.mCenter.SqlValues()},
                 {self.mExtent.SqlValues()}
-        );""".strip()
+        );""".replace("    ", "").strip()
 
         return output
 
@@ -110,7 +110,7 @@ class Asset:
         {Quad.SqlCreateTable("Scale")},
         {Quad.SqlCreateTable("mCenter")},
         {Quad.SqlCreateTable("mExtent")}
-        );""".strip()
+        );""".replace("    ", "").strip()
 
         return output
 

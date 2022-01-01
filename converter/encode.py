@@ -26,7 +26,7 @@ def encode(data):
     slab_compressed_data = gzip.compress(slab_data, compresslevel=9, mtime=0)
 
     if (len(slab_compressed_data) > 30720):
-        print(f"""Slab exceeds TaleSpire size limit of 30720b binary data!
+        print(f"""Slab exceeds TaleSpire size limit of 30720B binary data!
         Aborting. ({len(slab_compressed_data)} bytes)""")
         return b'``````'
 
