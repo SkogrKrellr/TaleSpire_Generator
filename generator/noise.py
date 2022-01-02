@@ -33,8 +33,7 @@ class Noise:
 
     def generateSimpleNoiseArray(
         self,
-        xSize,
-        ySize,
+        xSize, ySize,
         scale,
         offset=[0, 0],
         useRidgeNoise=False
@@ -59,6 +58,7 @@ class Noise:
     def generateComplexNoiseArray(
         self,
         xSize, ySize,
+        noiseSizeX, noiseSizeY,
         combinedPasses=True,
         octaves=None,
         scales=None,
@@ -71,7 +71,7 @@ class Noise:
         if scales is None:
             scales = self.scales
 
-        maxSize = max(xSize, ySize)
+        maxSize = max(noiseSizeX, noiseSizeY)
         octaveSum = sum(octaves)
 
         passes = []

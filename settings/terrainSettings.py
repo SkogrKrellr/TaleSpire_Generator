@@ -4,7 +4,7 @@ from .settings import Settings
 DEFAULT_CLUMPING = float(Config.get('terrainSettings', 'default_clumping'))
 DEFAULT_HEIGHT_MIN = bool(Config.getboolean('terrainSettings', 'height_min'))
 DEFAULT_HEIGHT_MAX = float(Config.get('terrainSettings', 'height_max'))
-DEFAULT_BLEND_MULTIPLIER = int(Config.get('terrainSettings', 'blend_height_multiplier'))
+DEFAULT_BLEND_MULTIPLIER = float(Config.get('terrainSettings', 'blend_height_multiplier'))
 
 
 class TerrainSettings(Settings):

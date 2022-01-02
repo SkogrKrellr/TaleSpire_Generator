@@ -8,6 +8,6 @@ class TestSetup(unittest.TestCase):
     def setUpClass(self) -> None:
         print("\nSetup: ", end='')
 
-    def test_firstTimeSetup(self):
-        # FirstTimeSetup()
-        pass
+    # def test_firstTimeSetup(self):
+    #     FirstTimeSetup()
+    #     pass

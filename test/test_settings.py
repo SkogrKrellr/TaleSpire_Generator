@@ -49,6 +49,7 @@ class TestSettings(unittest.TestCase):
         asset: 3911d10d-142b-4f33-9fea-5d3a10c53781
         density: 20
         clumping: 12
+        verticalOffset: 0
         randomNoiseWeight: 0.5
         randomNudgeEnabled: True
         randomRotationEnabled: True

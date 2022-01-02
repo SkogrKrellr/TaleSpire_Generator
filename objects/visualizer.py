@@ -23,6 +23,21 @@ class Visualizer():
         plt.colorbar()
         plt.show()
 
+    def showImages(
+        images,
+    ):
+
+        rows = 4
+        columns = 3
+
+        fig = plt.figure(figsize=(10, 7))
+        for n, image in enumerate(images):
+            fig.add_subplot(rows, columns, n+1)
+            plt.imshow(image["map"])
+            plt.axis('off')
+            plt.title(image["name"])
+        plt.show()
+
     def show3dPlot(matrix, clip01=True):
         (x, y) = numpy.meshgrid(
             numpy.arange(matrix.shape[0]),
