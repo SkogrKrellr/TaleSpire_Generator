@@ -8,13 +8,12 @@ This is a python framework for generating TaleSpire terrain and place objects on
 2. [Basic Use](###Basic%20Use)
 3. [Documentation](###Documentation)
 4. [Future plans](###Future%20plans)
-
-Some examples of terrain generation: *(Skies are photoshoped)*
-![desert](https://user-images.githubusercontent.com/45770000/147947009-a97216b0-fe52-4af4-9a37-255437ef3ad9.png)
-![desert2](https://user-images.githubusercontent.com/45770000/147947076-cdd7a790-0d82-43e7-9fad-fa50897c6079.png)
-![forest](https://user-images.githubusercontent.com/45770000/147947124-c5b4650f-bc11-4443-aa42-4d1f38dea45b.png)
-![jungle](https://user-images.githubusercontent.com/45770000/147947175-71e722ea-4773-4674-9c2a-eb75708bac0e.png)
-![jungle_totem](https://user-images.githubusercontent.com/45770000/147947241-034a554b-d577-4b6e-b44c-798f13ac28ff.png)
+   Some examples of terrain generation: *(Skies are edited after the fact)*
+   ![desert](https://user-images.githubusercontent.com/45770000/147947009-a97216b0-fe52-4af4-9a37-255437ef3ad9.png)
+   ![desert2](https://user-images.githubusercontent.com/45770000/147947076-cdd7a790-0d82-43e7-9fad-fa50897c6079.png)
+   ![forest](https://user-images.githubusercontent.com/45770000/147947124-c5b4650f-bc11-4443-aa42-4d1f38dea45b.png)
+   ![jungle](https://user-images.githubusercontent.com/45770000/147947175-71e722ea-4773-4674-9c2a-eb75708bac0e.png)
+   ![jungle_totem](https://user-images.githubusercontent.com/45770000/147947241-034a554b-d577-4b6e-b44c-798f13ac28ff.png)
 
 ---
 
