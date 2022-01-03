@@ -5,9 +5,9 @@ This is a python framework for generating TaleSpire terrain and place objects on
 #### Table of contents
 
 1. [Instalation](###Instalation)
-2. [Basic%20Use](###Basic%20Use)
+2. [Basic Use](###Basic%20Use)
 3. [Documentation](###Documentation)
-4. [Future%20plans](###Future%20plans)
+4. [Future plans](###Future%20plans)
 
 Some examples of terrain generation: *(Skies are photoshoped)*
 ![desert](https://user-images.githubusercontent.com/45770000/147947009-a97216b0-fe52-4af4-9a37-255437ef3ad9.png)
@@ -112,7 +112,7 @@ Generated result viewed in TaleSpire:
 
 ### Documentation
 
-Wiki :
+Wiki : https://github.com/NikitaCern/TaleSpire_Generator/wiki
 
 ---
 
