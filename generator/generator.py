@@ -171,6 +171,9 @@ class Generator:
     ):
         result = []
 
+        terrainAssets = Generator.createObjectList(terrainAssets)
+        placeObjects = Generator.createObjectList(placeObjects, True)
+
         self.generateElevation(
             self.x*sizes[0],
             self.y*sizes[1],

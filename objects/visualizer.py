@@ -27,18 +27,21 @@ class Visualizer():
         images,
     ):
 
-        rows = 4
-        columns = 3
+        rows = 1
+        columns = len(images)
 
-        fig = plt.figure(figsize=(10, 7))
+        fig = plt.figure(figsize=(10, 10))
         for n, image in enumerate(images):
             fig.add_subplot(rows, columns, n+1)
-            plt.imshow(image["map"])
+            plt.imshow(image["map"], cmap=DEFAULT_CMAP, interpolation='None')
             plt.axis('off')
             plt.title(image["name"])
         plt.show()
 
-    def show3dPlot(matrix, clip01=True):
+    def show3dPlot(
+        matrix,
+        clip01=True
+    ):
         (x, y) = numpy.meshgrid(
             numpy.arange(matrix.shape[0]),
             numpy.arange(matrix.shape[1]))
