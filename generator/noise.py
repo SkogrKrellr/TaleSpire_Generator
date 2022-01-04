@@ -1,6 +1,4 @@
-from math import log1p
 import numpy
-import poisson_disc as pd
 from opensimplex import OpenSimplex
 from objects.config import config as Config
 from objects.visualizer import Visualizer

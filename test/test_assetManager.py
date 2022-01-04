@@ -84,3 +84,39 @@ class TestAssetManager(unittest.TestCase):
             result,
             expected
         )
+
+    def test_removeAsset(self):
+
+        customAssetUUID = AssetManager.addCustomAsset(
+            "Tree",
+            "```H4sIAAAAAAAACzv369xFJgZmBgaGe57nRebNPO24TLyae47AxiWMQDFXyw575lxvr4W7A4WED++8BRK7k73s6Rlzcectxxbu6DGe9BIkxsDAwaQAJFkYBFgagDQrWKyBhYEBANfydP1gAAAA```"
+        )
+
+        asset = AssetManager.getAsset(customAssetUUID)
+        result = asset.getDecoded()
+
+        expected = [
+            {'uuid': '14CF49DE-999E-41CB-A617-7B0B9C10B1A4',
+                'instance_count': 1,
+                'instances': [{'x': 0, 'y': 2, 'z': 130, 'rot': 0}]},
+            {'uuid': '3F883945-6D03-4A4B-A1BB-511213C3B9DA',
+                'instance_count': 1,
+                'instances': [{'x': 4, 'y': 8, 'z': 260, 'rot': 0}]},
+            {'uuid': 'E5A66BDC-37CC-4317-B4C6-A1B88C3392E9',
+                'instance_count': 1,
+                'instances': [{'x': 5, 'y': 0, 'z': 0, 'rot': 270}]},
+        ]
+
+        self.assertListEqual(
+            result,
+            expected
+        )
+
+        AssetManager.removeAsset(customAssetUUID)
+        asset = AssetManager.getAsset(customAssetUUID)
+        
+        self.assertEqual(
+            asset,
+            None
+        )
+

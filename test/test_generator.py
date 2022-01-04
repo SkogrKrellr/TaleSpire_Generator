@@ -17,6 +17,30 @@ class TestGenerator(unittest.TestCase):
         print("\nGenerate: ", end='')
         self.maxDiff = None
 
+        self.customObjects = {
+            "Tree_4": AssetManager.addCustomAsset(
+                "Tree_4",
+                "```H4sIAAAAAAAACzv369xFJgZmBgYGV8sOe+Zcb6+FuwOFhA/vvMUIFGP54+9t4qri2XJlvvU8595GJqDYnexlT8+YiztvObZwR4/xpJcgdYwMEmxACmiOAIsBQwMjEwMHUwADBEBoAGi/N01oAAAA```"
+            ),
+            "Tree_3": AssetManager.addCustomAsset(
+                "Tree_3",
+                "```H4sIAAAAAAAACzv369xFJgYWBgYGJ8kbgpNqqpxbpJeV8cZNqGMEirladtgz53p7LdwdKCR8eOctkBjLH39vE1cVz5Yr863nOfc2gsTuZC97esZc3HnLsYU7eownvQSJMTMIsAQAaTYGCTYgxcDIwMG0gQECIDQAM1rOhHwAAAA=```"
+            ),
+            "Tree_2": AssetManager.addCustomAsset(
+                "Tree_2",
+                "```H4sIAAAAAAAACzv369xFJgZmBgYGV8sOe+Zcb6+FuwOFhA/vvMUIFGP54+9t4qri2XJlvvU8595GkNid7GVPz5iLO285tnBHj/GklyAxLgYBFgYw4GBSYGRgBokpgAgGAJmdG+RgAAAA```"
+            ),
+            "Tree_1": AssetManager.addCustomAsset(
+                "Tree_1",
+                "```H4sIAAAAAAAACzv369xFJgYmBgYGV8sOe+Zcb6+FuwOFhA/vvMUIFLuTvezpGXNx5y3HFu7oMZ70EiTGz8ABUg4GE8AkAIf2hGVEAAAA```"
+            ),
+            "Crypt": AssetManager.addCustomAsset(
+                "Crypt",
+                "```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```"
+            ),
+
+        }
+
     def tearDown(self) -> None:
         return super().tearDown()
 
@@ -188,13 +212,8 @@ class TestGenerator(unittest.TestCase):
             {"asset": "3911d10d-142b-4f33-9fea-5d3a10c53781"}
         ]
 
-        treeUUID = AssetManager.addCustomAsset(
-            "Tree_4",
-            "```H4sIAAAAAAAACzv369xFJgZmBgYGV8sOe+Zcb6+FuwOFhA/vvMUIFGP54+9t4qri2XJlvvU8595GJqDYnexlT8+YiztvObZwR4/xpJcgdYwMEmxACmiOAIsBQwMjEwMHUwADBEBoAGi/N01oAAAA```"
-        )
-
         placeObjects = [
-            {"asset": treeUUID}
+            {"asset": self.customObjects["Tree_4"]}
         ]
         output = self.generator.generate(
             groundAssets,
@@ -216,10 +235,7 @@ class TestGenerator(unittest.TestCase):
             {"asset": "3911d10d-142b-4f33-9fea-5d3a10c53781"}
         ]
         placeObjects = [
-            {"asset": AssetManager.addCustomAsset(
-                "Tree_4",
-                "```H4sIAAAAAAAACzv369xFJgZmBgYGV8sOe+Zcb6+FuwOFhA/vvMUIFGP54+9t4qri2XJlvvU8595GJqDYnexlT8+YiztvObZwR4/xpJcgdYwMEmxACmiOAIsBQwMjEwMHUwADBEBoAGi/N01oAAAA```"
-            )}
+            {"asset": self.customObjects["Tree_4"]}
         ]
         output = self.generator.generate(
             groundAssets,
@@ -242,10 +258,7 @@ class TestGenerator(unittest.TestCase):
         ]
 
         placeObjects = [
-            {"asset": AssetManager.addCustomAsset(
-                "Tree_4",
-                "```H4sIAAAAAAAACzv369xFJgZmBgYGV8sOe+Zcb6+FuwOFhA/vvMUIFGP54+9t4qri2XJlvvU8595GJqDYnexlT8+YiztvObZwR4/xpJcgdYwMEmxACmiOAIsBQwMjEwMHUwADBEBoAGi/N01oAAAA```"
-            )}
+            {"asset": self.customObjects["Tree_4"]}
         ]
 
         output = self.generator.generate(
@@ -257,11 +270,7 @@ class TestGenerator(unittest.TestCase):
     def test_rotation(self):
         expected = """```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```"""
 
-        placeObject = AssetManager.getAsset(
-            AssetManager.addCustomAsset(
-                "Crypt",
-                "```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```"
-            ))
+        placeObject = AssetManager.getAsset(self.customObjects["Crypt"])
 
         self.generator.output = {
             "unique_asset_count": 0,
@@ -292,9 +301,7 @@ class TestGenerator(unittest.TestCase):
             {"asset": "cf6063bb-5c6e-4107-b3e9-9c0c5ac75768"}
         ]
         placeObjects = [
-            {"asset": AssetManager.addCustomAsset(
-                "Tree_3",
-                "```H4sIAAAAAAAACzv369xFJgYWBgYGJ8kbgpNqqpxbpJeV8cZNqGMEirladtgz53p7LdwdKCR8eOctkBjLH39vE1cVz5Yr863nOfc2gsTuZC97esZc3HnLsYU7eownvQSJMTMIsAQAaTYGCTYgxcDIwMG0gQECIDQAM1rOhHwAAAA=```"),
+            {"asset": self.customObjects["Tree_3"],
                 "density": 10,
                 "clumping": 32,
                 "randomNoiseWeight": 0.8,
@@ -302,9 +309,7 @@ class TestGenerator(unittest.TestCase):
                 "randomRotationEnabled": True,
                 "heightBasedMultiplier": 0.5,
                 "heightBasedOffset": 0},
-            {"asset": AssetManager.addCustomAsset(
-                "Tree_2",
-                "```H4sIAAAAAAAACzv369xFJgZmBgYGV8sOe+Zcb6+FuwOFhA/vvMUIFGP54+9t4qri2XJlvvU8595GkNid7GVPz5iLO285tnBHj/GklyAxLgYBFgYw4GBSYGRgBokpgAgGAJmdG+RgAAAA```"),
+            {"asset": self.customObjects["Tree_2"],
                 "density": 16,
                 "clumping": 16,
                 "randomNoiseWeight": 0.8,
@@ -312,9 +317,7 @@ class TestGenerator(unittest.TestCase):
                 "randomRotationEnabled": True,
                 "heightBasedMultiplier": 0.5,
                 "heightBasedOffset": 0},
-            {"asset": AssetManager.addCustomAsset(
-                "Tree_1",
-                "```H4sIAAAAAAAACzv369xFJgYmBgYGV8sOe+Zcb6+FuwOFhA/vvMUIFLuTvezpGXNx5y3HFu7oMZ70EiTGz8ABUg4GE8AkAIf2hGVEAAAA```"),
+            {"asset": self.customObjects["Tree_1"],
                 "density": 10,
                 "clumping": 1,
                 "randomNoiseWeight": 0.8,
@@ -366,9 +369,7 @@ class TestGenerator(unittest.TestCase):
             {"asset": "cf6063bb-5c6e-4107-b3e9-9c0c5ac75768"}
         ]
         placeObjects = [
-            {"asset": AssetManager.addCustomAsset(
-                "Tree_3",
-                "```H4sIAAAAAAAACzv369xFJgYWBgYGJ8kbgpNqqpxbpJeV8cZNqGMEirladtgz53p7LdwdKCR8eOctkBjLH39vE1cVz5Yr863nOfc2gsTuZC97esZc3HnLsYU7eownvQSJMTMIsAQAaTYGCTYgxcDIwMG0gQECIDQAM1rOhHwAAAA=```"),
+            {"asset": self.customObjects["Tree_3"],
                 "density": 10,
                 "clumping": 32,
                 "randomNoiseWeight": 0.8,
@@ -376,9 +377,7 @@ class TestGenerator(unittest.TestCase):
                 "randomRotationEnabled": True,
                 "heightBasedMultiplier": 0.5,
                 "heightBasedOffset": 0},
-            {"asset": AssetManager.addCustomAsset(
-                "Tree_2",
-                "```H4sIAAAAAAAACzv369xFJgZmBgYGV8sOe+Zcb6+FuwOFhA/vvMUIFGP54+9t4qri2XJlvvU8595GkNid7GVPz5iLO285tnBHj/GklyAxLgYBFgYw4GBSYGRgBokpgAgGAJmdG+RgAAAA```"),
+            {"asset": self.customObjects["Tree_2"],
                 "density": 16,
                 "clumping": 16,
                 "randomNoiseWeight": 0.8,
@@ -386,9 +385,7 @@ class TestGenerator(unittest.TestCase):
                 "randomRotationEnabled": True,
                 "heightBasedMultiplier": 0.5,
                 "heightBasedOffset": 0},
-            {"asset": AssetManager.addCustomAsset(
-                "Tree_1",
-                "```H4sIAAAAAAAACzv369xFJgYmBgYGV8sOe+Zcb6+FuwOFhA/vvMUIFLuTvezpGXNx5y3HFu7oMZ70EiTGz8ABUg4GE8AkAIf2hGVEAAAA```"),
+            {"asset": self.customObjects["Tree_1"],
                 "density": 10,
                 "clumping": 1,
                 "randomNoiseWeight": 0.8,
@@ -412,9 +409,7 @@ class TestGenerator(unittest.TestCase):
                 "randomRotationEnabled": False,
                 "heightBasedMultiplier": 1,
                 "heightBasedOffset": -5},
-            {"asset": AssetManager.addCustomAsset(
-                "House",
-                "```H4sIAAAAAAAACzv369xFJgZmBgYGV8sOe+Zcb6+FuwOFhA/vvMUIFGP54+9t4qri2XJlvvU8595GkNid7GVPz5iLO285tnBHj/GklyAxLgYBFgYw4GBSYGRgBokpgAgGAJmdG+RgAAAA```"),
+            {"asset": self.customObjects["Tree_2"],
                 "density": 20,
                 "clumping": 16,
                 "randomNoiseWeight": 1.0,

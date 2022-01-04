@@ -12,6 +12,8 @@ class AssetManager():
     Class for a Asset manager. It is responsible for reading and
     writing assets to the database
     """
+    def __init__(self):
+        pass
 
     def getAsset(
         uuid
@@ -30,11 +32,13 @@ class AssetManager():
 
         database = Database()
         object = database.fetchall(Asset.SqlGetAsset(str(uuid).lower()))
+
+        if len(object) == 0:
+            return None
+
         assetDictionary = AssetManager.remap(object[0])
         className = globals()[assetDictionary["Type"]]
         database.close()
-        if className == "":
-            return None
         asset = className(assetDictionary)
         return asset
 
@@ -64,12 +68,40 @@ class AssetManager():
         database.close()
         return customAsset.uuid
 
+    def removeAsset(
+        uuid
+    ):
+        """
+        Function to remove an asset from the database.
+
+        Parameters:
+            uuid (str): uuid of the asset to be deleted
+        """
+
+        database = Database()
+        database.execute(Asset.SqlDeleteAsset(uuid))
+        database.close()
+
     def remap(
         object
     ):
         """
-        Function to remap assets when importing from file and reading
-        from database.
+        Function to remap asset dictionaries
+
+        Parameters:
+            object (dict, tuple): Object that needs to be remaped
+
+        Returns:
+            dict: remaped asset as dictionary
+        """
+
+        if type(object) == tuple:
+            return AssetManager.remapFromDB(object)
+        return AssetManager.remapFromFile(object)
+
+    def remapFromDB(object):
+        """
+        Function to remap assets when reading from database.
 
         Parameters:
             object (dict, tuple): Object that needs to be remaped
@@ -86,39 +118,57 @@ class AssetManager():
             "mExtent": {}
         }
 
-        if type(object) == tuple:
-            result["UUID"] = object[0]
-            result["Type"] = object[1]
-            result["Name"] = object[2]
-            result["AssetName"] = object[3]
-            result["String"] = object[4]
+        result["UUID"] = object[0]
+        result["Type"] = object[1]
+        result["Name"] = object[2]
+        result["AssetName"] = object[3]
+        result["String"] = object[4]
 
-            result["Position"]["x"] = object[5]
-            result["Position"]["y"] = object[6]
-            result["Position"]["z"] = object[7]
-            result["Position"]["w"] = object[8]
+        result["Position"]["x"] = object[5]
+        result["Position"]["y"] = object[6]
+        result["Position"]["z"] = object[7]
+        result["Position"]["w"] = object[8]
 
-            result["Rotation"]["x"] = object[9]
-            result["Rotation"]["y"] = object[10]
-            result["Rotation"]["z"] = object[11]
-            result["Rotation"]["w"] = object[12]
+        result["Rotation"]["x"] = object[9]
+        result["Rotation"]["y"] = object[10]
+        result["Rotation"]["z"] = object[11]
+        result["Rotation"]["w"] = object[12]
 
-            result["Scale"]["x"] = object[13]
-            result["Scale"]["y"] = object[14]
-            result["Scale"]["z"] = object[15]
-            result["Scale"]["w"] = object[16]
+        result["Scale"]["x"] = object[13]
+        result["Scale"]["y"] = object[14]
+        result["Scale"]["z"] = object[15]
+        result["Scale"]["w"] = object[16]
 
-            result["mCenter"]["x"] = object[17]
-            result["mCenter"]["y"] = object[18]
-            result["mCenter"]["z"] = object[19]
-            result["mCenter"]["w"] = object[20]
+        result["mCenter"]["x"] = object[17]
+        result["mCenter"]["y"] = object[18]
+        result["mCenter"]["z"] = object[19]
+        result["mCenter"]["w"] = object[20]
 
-            result["mExtent"]["x"] = object[21]
-            result["mExtent"]["y"] = object[22]
-            result["mExtent"]["z"] = object[23]
-            result["mExtent"]["w"] = object[24]
+        result["mExtent"]["x"] = object[21]
+        result["mExtent"]["y"] = object[22]
+        result["mExtent"]["z"] = object[23]
+        result["mExtent"]["w"] = object[24]
 
-            return result
+        return result
+
+    def remapFromFile(object):
+        """
+        Function to remap assets when importing from file.
+
+        Parameters:
+            object (dict, tuple): Object that needs to be remaped
+
+        Returns:
+            dict: remaped asset as dictionary
+        """
+
+        result = {
+            "Position": {},
+            "Rotation": {},
+            "Scale": {},
+            "mCenter": {},
+            "mExtent": {}
+        }
 
         result["UUID"] = object["Id"]
         result["Name"] = object["Name"]

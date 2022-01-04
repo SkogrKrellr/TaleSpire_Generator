@@ -4,10 +4,10 @@ This is a python framework for generating TaleSpire terrain and place objects on
 
 #### Table of contents
 
-1. [Instalation](###Instalation)
-2. [Basic Use](###Basic%20Use)
-3. [Documentation](###Documentation)
-4. [Future plans](###Future%20plans)
+1. [Instalation](#instalation)
+2. [Basic Use](#basic-use)
+3. [Documentation](#documentation)
+4. [Future plans](#future-plans)
 
 Some examples of terrain generation: *(Skies are edited after the fact)*
    ![desert](https://user-images.githubusercontent.com/45770000/147947009-a97216b0-fe52-4af4-9a37-255437ef3ad9.png)
@@ -26,7 +26,17 @@ You will need to have Python3 ( v3.9 or above) installed, and Talespire installe
 2. Locate `index.json` file in Talespire installation folder. 
    Most likely it is in: `..\Steam\steamapps\common\TaleSpire\Taleweaver\d71427a1-5535-4fa7-82d7-4ca1e75edbfd` 
    Place the *index.json* in the `etc` folder of the cloned repository
-3. Run the setup script with the command ``` todo ``` (it might take a second)
+3. Run the setup script with the command:
+
+```bash
+# This will install required packages
+pip install -r requirements.txt
+# This will create and populate the database
+python .\firstTimeSetup.py
+# Check if everything is working by running unittests
+python -m unittest
+```
+
 4. All Done!
 
 ---
@@ -112,7 +122,7 @@ Generated result viewed in TaleSpire:
 
 ### Documentation
 
-Wiki : https://github.com/NikitaCern/TaleSpire_Generator/wiki
+Wiki : (Working on it)
 
 ---
 

@@ -8,15 +8,27 @@ from objects.prop import Prop
 from objects.tile import Tile
 
 
-def Setup() -> None:
-    CreateTables()
+def setup():
+    print("Are you sure you want to do this?")
+    print("!!! Existing tables will be dropped !!!")
+    print("(Enter) continue")
+    print("(Ctrl-C) to stop", end="")
+
+    input()
+
+    print("Creating tables:")
+    createTables()
+
+    print("Populating tables:")
     populateAssets()
 
 
-def CreateTables():
+def createTables():
     database = Database()
-
+    print("--Droping existing tables")
     database.execute(Asset.SqlDropTable())
+
+    print("--Creating new tables")
     database.execute(Asset.SqlCreateTable())
     database.close()
 
@@ -31,13 +43,16 @@ def populateAssets():
 
     sqlQuerry = ""
 
-    for object in objects["Tiles"]:
+    print("--Generating Tile SQL: ")
+    for pos, object in enumerate(objects["Tiles"]):
         tile = Tile(AssetManager.remap(object))
         sqlQuerry += tile.SqlValues()
 
-    for object in objects["Props"]:
+    print("--Generating Prop SQL: ")
+    for pos, object in enumerate(objects["Props"]):
         prop = Prop(AssetManager.remap(object))
         sqlQuerry += prop.SqlValues()
 
+    print("--Executing SQL ( takes ~3 min ) ")
     database.executeScript(sqlQuerry)
     database.close()

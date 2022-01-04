@@ -185,3 +185,16 @@ class Asset:
         """
 
         return f""" SELECT * FROM {TABLE_NAME} WHERE UUID = '{uuid}'; """
+
+    def SqlDeleteAsset(uuid):
+        """
+        Function to return an SQL expression for deleteing a specific asset.
+
+        Parameters:
+            uuid (str): UUID of the asset to be removed from database.
+
+        Returns:
+            str: An SQL expression for remove asset from specific table.
+        """
+
+        return f""" DELETE FROM {TABLE_NAME} WHERE UUID = '{uuid}'; """
