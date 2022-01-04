@@ -227,7 +227,7 @@ class Generator:
         self.elevation = self.noise.generateComplexNoiseArray(
             sizeX+2,
             sizeY+2,
-            self.x, self.y,
+            max(self.x, self.y),
             useRidgeNoise=self.settings["useRidgeNoise"],
         )
 
@@ -322,10 +322,10 @@ class Generator:
                     "x": sizeX,
                     "y": sizeY
                 },
-                [  # Offset so that each asset would have a unique noise map
-                    7**(position+2),
-                    7**(position+2)
-                ],
+                {  # Offset so that each asset would have a unique noise map
+                    "x": 7**(position+2),
+                    "y": 7**(position+2)
+                },
                 settings["clumping"],
                 settings["randomNoiseWeight"],
             )

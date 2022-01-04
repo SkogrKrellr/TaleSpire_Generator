@@ -4,12 +4,10 @@ import matplotlib.pyplot as plt
 import numpy
 import pyperclip as pc
 from objects.visualizer import Visualizer
-import pandas as pd
 
 from generator.generator import Generator
 from objects.assetManager import AssetManager
 from converter.conversionManager import ConversionManager
-import settings
 
 
 class TestGenerator(unittest.TestCase):

@@ -8,7 +8,7 @@ from objects.prop import Prop
 from objects.tile import Tile
 
 
-def FirstTimeSetup() -> None:
+def Setup() -> None:
     CreateTables()
     populateAssets()
 

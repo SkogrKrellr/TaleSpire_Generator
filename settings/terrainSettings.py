@@ -8,6 +8,13 @@ DEFAULT_BLEND_MULTIPLIER = float(Config.get('terrainSettings', 'blend_height_mul
 
 
 class TerrainSettings(Settings):
+    """
+    Class for Terrain settings.
+    This class extends Settings, and adds a Terrain specific settings
+
+    Attributes:
+        params (dict): A dictionary for settings.
+    """
 
     def __init__(self, passedSettings):
         Settings.__init__(self, passedSettings)

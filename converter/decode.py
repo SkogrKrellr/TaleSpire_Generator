@@ -14,6 +14,16 @@ def assemble_bytes(bytes):
 
 
 def decode_asset(asset_data):
+    """
+    Function to decode an asset header.
+
+    Parameters:
+        asset_data (str): containing asset header bytes
+
+    Returns:
+        dict: decoded asset header
+    """
+
     dec_data = unpack_from('IHH8BI', asset_data)
     uuid = (
         dec_data[0],
@@ -38,9 +48,23 @@ def decode_asset(asset_data):
     }
 
 
-# decodes an asset position, returns a tuple of which asset this
-# position belongs to (index from asset list) as well as the position
-def decode_asset_position(asset_position_data, assets, dec_asset_count):
+def decode_asset_position(
+    asset_position_data,
+    assets,
+    dec_asset_count
+):
+    """
+    Function that decodes an asset position, returns a tuple of which asset
+    this position belongs to (index from asset list) as well as the position
+
+    Parameters:
+        asset_position_data (str): containing asset header bytes
+        assets (dict): dictionary of asset and its positions
+        dec_asset_count (int): instance count
+
+    Returns:
+        dict: decoded asset header
+    """
     # decode position from blob passed on
     # unpack as little endian. data is stored as
     # 2 bit pad,
@@ -72,6 +96,16 @@ def decode_asset_position(asset_position_data, assets, dec_asset_count):
 
 
 def decode(data):
+    """
+    Function that decodes given TaleSpire string into dictionary
+
+    Parameters:
+        data (str): TaleSpire string
+
+    Returns:
+        json: decoded string
+    """
+
     out_json = {
         "unique_asset_count": 0,
         "asset_data": []

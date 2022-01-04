@@ -8,13 +8,26 @@ DEFAULT_CMAP = Config.get('visualizer', 'cmap')
 
 
 class Visualizer():
+    """
+    Class for Visualizing 2d arrays and heightmaps.
+    """
 
     def showImage(
         image,
         clipping=True,
-        min=0,
-        max=1
+        min=0.0,
+        max=1.0
     ):
+        """
+        Function for showing a single map on the screen as 2d plots.
+
+        Parameters:
+            image (2d array): A 2d array to be displayed.
+            clipping (bool): Enable clipping of displayed image.
+            min (float): Minimum value to be displayed image.
+            max (float): MAximum value to be displayed image.
+        """
+
         plt.imshow(image, cmap=DEFAULT_CMAP, interpolation='None')
 
         if clipping:
@@ -26,6 +39,21 @@ class Visualizer():
     def showImages(
         images,
     ):
+        """
+        Function for showing a single map on the screen as 2d plots.
+
+        Input dictionary structure:
+
+            [
+                {  "name" : str
+                    "map" : 2d array },
+                ...
+                {}
+            ]
+
+        Parameters:
+            images (list of dict): A list of dictionaries to be displayed
+        """
 
         rows = 1
         columns = len(images)
@@ -39,18 +67,26 @@ class Visualizer():
         plt.show()
 
     def show3dPlot(
-        matrix,
+        image,
         clip01=True
     ):
+
+        """
+        Function for showing a single map on the screen, as a 3d model.
+
+        Parameters:
+            image (2d array): A 2d array to be displayed.
+            clip01 (bool): Enable clipping of values to 0 to 1.
+        """
         (x, y) = numpy.meshgrid(
-            numpy.arange(matrix.shape[0]),
-            numpy.arange(matrix.shape[1]))
+            numpy.arange(image.shape[0]),
+            numpy.arange(image.shape[1]))
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
 
         if clip01:
             ax.set_zlim3d(0, 1)
 
-        surf = ax.plot_surface(x, y, matrix, cmap=DEFAULT_CMAP)
+        surf = ax.plot_surface(x, y, image, cmap=DEFAULT_CMAP)
         fig.colorbar(surf)
         plt.show()

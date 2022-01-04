@@ -8,20 +8,51 @@ from converter.conversionManager import ConversionManager
 
 
 class AssetManager():
+    """
+    Class for a Asset manager. It is responsible for reading and
+    writing assets to the database
+    """
 
-    def __init__(self):
-        pass
+    def getAsset(
+        uuid
+    ):
+        """
+        Function to convert the objects atribute labels to a SQL expression by
+        adding a prefix to it.
 
-    def getAsset(uuid, name=None):
+        Parameters:
+            uuid (str): UUID of asset to be searched for
+
+        Returns:
+            Asset: object of the appropriate class, Custom, Prop or Tile
+            None: If no object was found
+        """
+
         database = Database()
         object = database.fetchall(Asset.SqlGetAsset(str(uuid).lower()))
-        assetDictionary = AssetManager.remap(object[0], True)
+        assetDictionary = AssetManager.remap(object[0])
         className = globals()[assetDictionary["Type"]]
-
+        database.close()
+        if className == "":
+            return None
         asset = className(assetDictionary)
         return asset
 
-    def addCustomAsset(name, string):
+    def addCustomAsset(
+        name,
+        string
+    ):
+        """
+        Function to add a custom asset to the database.
+
+        Parameters:
+            name (str): Name for the asset to be added
+            string (str): Encoded string that represents the asset
+
+        Returns:
+            str: UUID of the added asset
+        """
+
         database = Database()
 
         customAsset = CustomAsset({
@@ -30,9 +61,23 @@ class AssetManager():
         })
 
         database.execute(customAsset.SqlValues())
+        database.close()
         return customAsset.uuid
 
-    def remap(object, fromDB=False):
+    def remap(
+        object
+    ):
+        """
+        Function to remap assets when importing from file and reading
+        from database.
+
+        Parameters:
+            object (dict, tuple): Object that needs to be remaped
+
+        Returns:
+            dict: remaped asset as dictionary
+        """
+
         result = {
             "Position": {},
             "Rotation": {},
@@ -41,7 +86,7 @@ class AssetManager():
             "mExtent": {}
         }
 
-        if fromDB:
+        if type(object) == tuple:
             result["UUID"] = object[0]
             result["Type"] = object[1]
             result["Name"] = object[2]
@@ -108,6 +153,17 @@ class AssetManager():
         return result
 
     def getAssetList(assetList):
+        """
+        Function to get a list of assets from a list Settings by
+        their UUIDs
+
+        Parameters:
+            assetList (array of Settings): List of assets to gather
+
+        Returns:
+            list: array of gathered assets
+        """
+
         assets = []
         for asset in assetList:
             assets.append(AssetManager.getAsset(asset.params["asset"]))

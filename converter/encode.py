@@ -8,10 +8,30 @@ PADDING = b'\x00\x00'
 
 
 def create_header(unique_asset_count):
+    """
+    Function to create a header for encoded assets.
+
+    Parameters:
+        unique_asset_count (int): amount of unique assets
+
+    Returns:
+        str: Header value + assetcounf encoded to bytes
+    """
+
     return HEADER + unique_asset_count.to_bytes(4, byteorder='little')
 
 
 def encode(data):
+    """
+    Function to encode a dictionary to a TaleSpire readable format.
+
+    Parameters:
+        data (dict): containing each assets uuid and their position
+
+    Returns:
+        str: encoded dictionary
+    """
+
     slab_data = b''
     slab_json = json.loads(data)
     slab_json['unique_asset_count'] = len(slab_json['asset_data'])
@@ -36,6 +56,16 @@ def encode(data):
 
 
 def encode_asset(asset_json):
+    """
+    Function to encode an asset header.
+
+    Parameters:
+        asset_json (dict): containing each assets uuid and their instance count
+
+    Returns:
+        str: encoded asset uuid and instance count
+    """
+
     uuid_parts = asset_json['uuid'].split("-")
 
     uuid_bytes = b''
@@ -52,6 +82,16 @@ def encode_asset(asset_json):
 
 
 def encode_asset_position(instance_json):
+    """
+    Function to encode a position.
+
+    Parameters:
+        instance_json (dict): containing each position and rotation
+
+    Returns:
+        str: encoded position data
+    """
+
     position = 0
     position |= int(instance_json['x'])
     position |= (int(instance_json['y']) << 36)
@@ -62,6 +102,17 @@ def encode_asset_position(instance_json):
 
 
 def create_assets_data(assets_json):
+    """
+    Function to encode a list of assets and their positions.
+
+    Parameters:
+        assets_json (dict): containing each asset list and their positions
+
+    Returns:
+        str: encoded asset uuid list
+        str: encoded asset position list
+    """
+
     asset_list = b''
     position_list = b''
 

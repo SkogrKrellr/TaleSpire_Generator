@@ -6,8 +6,26 @@ from converter.conversionManager import ConversionManager
 
 
 class CustomAsset(Asset):
+    """
+    Class for a custom asset. This class extends asset.
 
-    def __init__(self, object) -> None:
+    It has no aditional attributes when compared to its parent class
+    """
+
+    def __init__(
+        self,
+        object
+    ):
+        """
+        Constructor for custom assets.
+
+        In addition to parent classes constructor, it also calculates the
+        dimensions (mesh Center and mesh Extents) of the current object.
+
+        Parameters:
+            object (dict): A dictionary of atributes for the asset.
+        """
+
         Asset.__init__(self, object)
         if(
             self.mCenter == Quad(0, 0, 0, 0) or
@@ -63,4 +81,11 @@ class CustomAsset(Asset):
             )
 
     def getDecoded(self):
+        """
+        Function for getting the decoded version of the asset string
+
+        Returns:
+            dict: A dictionary of assets and their positions
+        """
+
         return ConversionManager.decode(self.string)["asset_data"]

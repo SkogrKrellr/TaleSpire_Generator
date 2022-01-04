@@ -11,6 +11,13 @@ DEFAULT_RANDOM_NOISE_WEIGHT = float(Config.get('placeObjectSettings', 'random_no
 
 
 class PlaceObjectSettings(Settings):
+    """
+    Class for Place Object settings.
+    This class extends Settings, and adds a Place Object specific settings
+
+    Attributes:
+        params (dict): A dictionary for settings.
+    """
 
     def __init__(self, passedSettings):
         Settings.__init__(self, passedSettings)
