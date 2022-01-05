@@ -1,7 +1,7 @@
 import numpy
 from opensimplex import OpenSimplex
-from objects.config import config as Config
-from objects.visualizer import Visualizer
+from config.config import config as Config
+from visualizer.visualizer import Visualizer
 
 
 class Noise:

@@ -1,6 +1,6 @@
 import uuid as UUID
 from objects.quad import Quad
-from objects.config import config as Config
+from config.config import config as Config
 
 TABLE_NAME = DATABASE_NAME = Config.get('tableName', 'assets')
 

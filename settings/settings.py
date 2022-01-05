@@ -1,4 +1,4 @@
-from objects.config import config as Config
+from config.config import config as Config
 
 DEFAULT_DENSITY = float(Config.get('settings', 'default_density'))
 DEFAULT_CLUMPING = float(Config.get('settings', 'default_clumping'))

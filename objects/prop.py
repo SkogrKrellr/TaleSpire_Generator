@@ -1,4 +1,4 @@
-from objects.config import *
+from config.config import *
 from objects.asset import Asset
 
 

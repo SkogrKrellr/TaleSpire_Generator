@@ -1,9 +1,5 @@
 import json
 import unittest
-import matplotlib.pyplot as plt
-import numpy
-import pyperclip as pc
-from objects.visualizer import Visualizer
 
 from generator.generator import Generator
 from objects.assetManager import AssetManager

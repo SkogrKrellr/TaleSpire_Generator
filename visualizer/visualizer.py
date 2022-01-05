@@ -1,6 +1,6 @@
 import numpy
 import matplotlib.pyplot as plt
-from objects.config import config as Config
+from config.config import config as Config
 
 DEFAULT_CMAP = Config.get('visualizer', 'cmap')
 

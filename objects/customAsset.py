@@ -1,5 +1,5 @@
 import objects.assetManager
-from objects.config import *
+from config.config import *
 from objects.asset import Asset
 from objects.quad import Quad
 from converter.conversionManager import ConversionManager

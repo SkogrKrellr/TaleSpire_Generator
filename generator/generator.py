@@ -4,7 +4,7 @@ import numpy
 from objects.tile import Tile
 from objects.assetManager import AssetManager
 from objects.customAsset import CustomAsset
-from objects.config import config as Config
+from config.config import config as Config
 from converter.conversionManager import ConversionManager
 from generator.noise import Noise
 from settings.placeObjectSettings import PlaceObjectSettings

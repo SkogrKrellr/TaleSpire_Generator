@@ -1,4 +1,4 @@
-from objects.config import config as Config
+from config.config import config as Config
 from .settings import Settings
 
 DEFAULT_CLUMPING = float(Config.get('terrainSettings', 'default_clumping'))
