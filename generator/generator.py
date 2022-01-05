@@ -1,14 +1,9 @@
 import json
 import math
 import numpy
-import pyperclip as pc
-from opensimplex import OpenSimplex
-
-from objects.asset import Asset
 from objects.tile import Tile
 from objects.assetManager import AssetManager
 from objects.customAsset import CustomAsset
-from objects.visualizer import Visualizer
 from objects.config import config as Config
 from converter.conversionManager import ConversionManager
 from generator.noise import Noise
