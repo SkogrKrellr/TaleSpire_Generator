@@ -1,3 +1,4 @@
+import math
 import numpy
 from opensimplex import OpenSimplex
 from config.config import config as Config
@@ -6,7 +7,7 @@ from visualizer.visualizer import Visualizer
 
 class Noise:
     """
-    Class for a Noise generation.
+    Class for a Noise generation using Opensimplex.
 
     Attributes:
         noise (OpenSimplex): object that generates noise
@@ -66,8 +67,8 @@ class Noise:
         Returns:
             float: value at that coordinate from -1.0 to 1.0
         """
-
-        return self.noise.noise2d(x, y)
+        value = self.noise.noise2d(x, y)
+        return value
 
     def getNoiseXYValue(self, x, y, scaleX, scaleY):
         """
@@ -106,8 +107,8 @@ class Noise:
             float: value at that scaled coordinate from 0.0 to 1.0
         """
 
-        noiceValue = self.getNoiseXYValue(x, y, scaleX, scaleY)
-        return 2 * (0.5 - abs(0.5 - noiceValue))
+        noiseValue = self.getNoiseXYValue(x, y, scaleX, scaleY)
+        return 2 * (0.5 - abs(0.5 - noiseValue))
 
     def generateSimpleNoiseArray(
         self,

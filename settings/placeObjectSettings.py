@@ -30,5 +30,6 @@ class PlaceObjectSettings(Settings):
             "randomNudgeEnabled": passedSettings['randomNudgeEnabled'] if 'randomNudgeEnabled' in keys else DEFAULT_RANDOM_NUDGE_ENABLED,
             "randomRotationEnabled": passedSettings['randomRotationEnabled'] if 'randomRotationEnabled' in keys else DEFAULT_RANDOM_ROTATION_ENABLED,
             "heightBasedMultiplier": passedSettings['heightBasedMultiplier'] if 'heightBasedMultiplier' in keys else DEFAULT_HEIGHT_BASED_MULTIPLIER,
-            "heightBasedOffset": passedSettings['heightBasedOffset'] if 'heightBasedOffset' in keys else DEFAULT_HEIGHT_BASED_OFFSET
+            "heightBasedOffset": passedSettings['heightBasedOffset'] if 'heightBasedOffset' in keys else DEFAULT_HEIGHT_BASED_OFFSET,
+            "placeOnCenter": passedSettings['placeOnCenter'] if 'placeOnCenter' in keys else True
         })

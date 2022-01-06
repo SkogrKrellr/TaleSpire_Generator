@@ -23,13 +23,35 @@ REALY_BIG_NUMBER = 20000
 
 
 class Generator:
+    """
+    Class for a TaleSpire terrain generation.
 
-    settings = {"useRidgeNoise": DEFAULT_USE_RIDGE_NOISE,
-                "preciseHeight": PRECISE_HEIGHT,
-                "heightBasedPlacement": USE_HEIGHT_ASSET_SPREAD,
-                }
+    Attributes:
+        x,y,z (int): size of block to generate
+        noise (Noise): noise generator
+        expontent (float): exponent for redistributing terrain
+        settings (dict): flags that alter generation
+        tileSize (float): maxima of the terrain tile lengths and widths
+        output (dict): output to store the not yet encoded TaleSpire object
+        elevation (2d array): heightmap for terrain
+        placeObjectZ (2d array): scaled elevation heightmap for object placement
+        terrainAssets (list): list of terrainSettings
+        placeAssets (list): list of placeObjectSettings
+        elevationMap (dict, list): a map for corelating height and asset to be placed
+        elevationMapSize (int): maximum value in elevationMap
+    """
+
+    settings = {
+        "useRidgeNoise": DEFAULT_USE_RIDGE_NOISE,
+        "preciseHeight": PRECISE_HEIGHT,
+        "heightBasedPlacement": USE_HEIGHT_ASSET_SPREAD,
+    }
 
     def __init__(self):
+        """
+        Constructor for Generator class.
+        """
+
         self.setXYZ(DEFAULT_X, DEFAULT_Y, DEFAULT_Z)
         self.setSeed(DEFAULTSEED)
         self.setOctaves(1, 0.5, 0.25, 0.125)
@@ -39,49 +61,144 @@ class Generator:
 
 # Setters / Getters
     def setXYZ(self, x, y, z):
+        """
+        Setter for size of blocks to be generated.
+
+        Parameters:
+            x (int): size in X dimension
+            y (int): size in Y dimension
+            z (int): size in Z dimension
+        """
+
         self.x = max(x, 1)
         self.y = max(y, 1)
         self.z = max(z, 1)
 
     def setOctaves(self, *args):
+        """
+        Setter for octaves in noise generator.
+
+        Parameters:
+            args (list of floats): multipliers for noises intensity
+        """
+
         self.noise.setOctaves(*args)
 
     def setScales(self, *args):
+        """
+        Setter for set scales in noise generator.
+
+        Parameters:
+            args (list of floats): multipliers for noises scale
+        """
+
         self.noise.setScales(*args)
 
     def setExponent(self, exponent):
+        """
+        Setter for redistribution of noise value.
+
+        Parameters:
+            exponent (float): exponent for redistribution
+        """
+
         self.exponent = float(exponent)
 
     def setSeed(self, seed):
+        """
+        Function to set noise generator seeds.
+
+        Parameters:
+            seed (any): seed for the generator
+        """
+
         self.noise = Noise(seed)
 
     def setTileSize(self, tileSize=0):
+        """
+        Function to set maximum terrain tile size.
+
+        Parameters:
+            tileSize (float): size of largest tiles maximum length or width
+        """
+
         self.tileSize = max(tileSize, 0)
-        self.tileThickness = 0
 
     def setUseRidgeNoise(self, useRidgeNoise=DEFAULT_USE_RIDGE_NOISE):
+        """
+        Function to set setting if ridge noise will be used.
+
+        Parameters:
+            useRidgeNoise (bool): will ridge noise be used
+        """
+
         self.settings["useRidgeNoise"] = bool(useRidgeNoise)
 
     def setUsePreciseHeight(self, usePreiceNoise=PRECISE_HEIGHT):
+        """
+        Function to set setting if precise height will be used.
+
+        Parameters:
+            usePreiceNoise (bool): will precise height be used
+        """
+
         self.settings["preciseHeight"] = bool(usePreiceNoise)
 
     def setUseHeightBasedTerrainAssetPlacement(
         self,
         useHeightBasedPlacement=USE_HEIGHT_ASSET_SPREAD
     ):
+        """
+        Function to set setting if terrain assets will be distributed based on
+        their height settings.
+
+        Parameters:
+            useHeightBasedPlacement (bool): will height based distribution used
+        """
+
         self.settings["heightBasedPlacement"] = bool(useHeightBasedPlacement)
 
     def initializeOutput(self):
+        """
+        Function for initializing output dictionary between block generation
+        """
+
         self.output = {
             "unique_asset_count": 0,
             "asset_data": {}
         }
 
     def getPos(self, x, y, z):
+        """
+        Function to get noise value at point X Y and scale it by Z.
+
+        Parameters:
+            x (int): X coordinate for noise
+            y (int): Y coordinate for noise
+            z (float): scaling factor for Z
+
+        Returns:
+            float: value at that coordinate from -1.0 to 1.0
+        """
+
         return math.ceil(self.elevation[x+1][y+1] / z)
 
 # Misc Math
     def calculateNewCoordinates(self, placement, rot, asset):
+        """
+        Function to rotate a part of a complex asset around its
+        left botto most corner.
+
+        Parameters:
+            placement (dict): placement of the elementary asset in
+                              relation to the complex assets origin
+            rot (int): amount of degrees to rotate
+            asset (Asset): asset that is going to be rotated
+
+        Returns:
+            dict: a set of new coordinates after rotation
+        """
+
         offset = {
             "x": 0,
             "y": 0
@@ -127,13 +244,26 @@ class Generator:
         }
 
         return (
-            new["x"] * axis["x"]["x"] + new["y"] * axis["y"]["x"] + offset["x"],
-            new["y"] * axis["y"]["y"] + new["x"] * axis["x"]["y"] + offset["y"],
-            new["z"],
-            angle
+           new["x"] * axis["x"]["x"] + new["y"] * axis["y"]["x"] + offset["x"],
+           new["y"] * axis["y"]["y"] + new["x"] * axis["x"]["y"] + offset["y"],
+           new["z"],
+           angle
         )
 
     def adaptiveThickness(self, x, y, z):
+        """
+        Function to calculate the biggest change in elevation in neighboring
+        tiles
+
+        Parameters:
+            x (int): X coordinate for referance tile to check change against
+            y (int): Y coordinate for referance tile to check change against
+            z (float): scaling factor for Z
+
+        Returns:
+            int: biggest tile difference in neighboring tiles
+        """
+
         current = self.getPos(x, y, z)
         return int(max(
             current - self.getPos(x, y-1, z)+1,
@@ -145,14 +275,39 @@ class Generator:
 
 # Elevation Modifiers
     def multiplyByValue(self, value=None):
+        """
+        Function to multiply elevation by a value.
+        If no value is provided, it will be multiplied by Z height
+
+        Parameters:
+            value (float): value for elevation multiplication
+        """
+
         if value is None:
             value = self.z
         self.elevation *= value
 
-    def floorElevation(self, steps):
+    def createTerrases(self, steps):
+        """
+        Function to devide terrain into step ammount of terrases
+
+        Parameters:
+            steps (int): number of terrasses to be generated
+        """
+
         self.elevation = numpy.floor(self.elevation*steps)/steps
 
-    def powerElevation(self, value=None):
+    def redistribute(self, value=None):
+        """
+        Function to remap values by replacing each elevation value
+        by an exponated version of it.
+
+        If no value is provided, exponent value will be used.
+
+        Parameters:
+            value (float): exponent
+        """
+
         if value is None:
             value = self.exponent
         self.elevation **= value
@@ -164,6 +319,21 @@ class Generator:
         placeObjects=[],
         sizes=[1, 1]
     ):
+        """
+        Function to generate X*Y ammount of terrain blocks, with
+        a set list of assets to be used in terrain.
+        And a set list of assets to be placed on the terrain
+
+        Parameters:
+            terrainAssets (list): list of terrain settings
+            placeObjects (list): list of place object settings
+            size (list): x and y component for how many blocks to generate in
+                         each direction
+
+        Returns:
+            dict: generated output for each x, y coordinate
+        """
+
         result = []
 
         terrainAssets = Generator.createObjectList(terrainAssets)
@@ -174,7 +344,7 @@ class Generator:
             self.y*sizes[1],
             terrainAssets
         )
-        self.powerElevation()
+        self.redistribute()
         self.multiplyByValue()
         self.setTileSize(self.terrainAssets[0].mExtent.x*2.0)
 
@@ -206,6 +376,21 @@ class Generator:
         placeObjects,
         offset=[0, 0]
     ):
+        """
+        Function to generate one terrain blocks, with
+        a set list of assets to be used in terrain.
+        And a set list of assets to be placed on the terrain
+
+        Parameters:
+            terrainAssets (list): list of terrain settings
+            placeObjects (list): list of place object settings
+            offset (list): x and y offset, for which block is being currently
+                           generated
+
+        Returns:
+            string: encoded TaleSpire string for generated block
+        """
+
         self.initializeOutput()
         self.populateElevation(terrainAssets, offset)
         self.populatePlaceObjects(placeObjects, offset)
@@ -213,6 +398,15 @@ class Generator:
         return ConversionManager.encode(string).decode("ascii")
 
     def generateElevation(self, sizeX, sizeY, assetList):
+        """
+        Function to generate elevation and unpack terrain setting list
+
+        Parameters:
+            sizeX (int): total X size of terrain to be generated
+            sizeY (int): total Y size of terrain to be generated
+            assetList (list): terrain setting list
+        """
+
         self.elevation = numpy.zeros((sizeX+2, sizeY+2))
         self.placeObjectZ = numpy.zeros((sizeX+2, sizeY+2))
 
@@ -227,6 +421,15 @@ class Generator:
         )
 
     def generatePlaceObjects(self, sizeX, sizeY, assetList):
+        """
+        Function to generate elevation and unpack place object setting list
+
+        Parameters:
+            sizeX (int): total X size of place object map to be generated
+            sizeY (int): total Y size of  place object map to be generated
+            assetList (list): place object setting list
+        """
+
         self.placeAssets = AssetManager.getAssetList(assetList)
         self.objectPlacements = []
         for position, asset in enumerate(self.placeAssets):
@@ -234,8 +437,7 @@ class Generator:
             placeObject = self.compilePlaceObjectNoiseMap(
                 sizeX,
                 sizeY,
-                assetSettings,
-                position
+                assetSettings
             )
             self.objectPlacements.append({
                 "name": asset.name,
@@ -245,6 +447,18 @@ class Generator:
 # Placement
 
     def place(self, asset, x, y, z, rot):
+        """
+        Function to place an asset in specific X, Y, Z coordinates with a
+        specific rotation
+
+        Parameters:
+            asset (Asset): asset to be placed
+            x (float): X coordinate where to place the asset
+            y (float): Y coordinate where to place the asset
+            z (float): Z coordinate where to place the asset
+            rot (int): Rotation of this asset
+        """
+
         # padding for when rotation places tiles outside bounds
         x += 5
         y += 5
@@ -254,6 +468,18 @@ class Generator:
             self.placeAsset(asset.uuid, x, y, z, rot)
 
     def placeAsset(self, uuid, x, y, z, rot):
+        """
+        Function to place an elementary asset in specific X, Y, Z coordinates
+        with a specific rotation
+
+        Parameters:
+            asset (Asset): asset to be placed
+            x (float): X coordinate where to place the asset
+            y (float): Y coordinate where to place the asset
+            z (float): Z coordinate where to place the asset
+            rot (int): Rotation of this asset
+        """
+
         if uuid not in self.output['asset_data'].keys():
             self.output['asset_data'][uuid] = {
                 "uuid": uuid,
@@ -269,6 +495,18 @@ class Generator:
         })
 
     def placeCustom(self, asset, x, y, z, rot):
+        """
+        Function to place a complex asset in specific X, Y, Z coordinates with
+        a specific rotation
+
+        Parameters:
+            asset (Asset): asset to be placed
+            x (float): X coordinate where to place the asset
+            y (float): Y coordinate where to place the asset
+            z (float): Z coordinate where to place the asset
+            rot (int): Rotation of this asset
+        """
+
         dictionary = asset.getDecoded()
         coordinates = []
 
@@ -311,15 +549,27 @@ class Generator:
             )
 
 # Helpers
-    def compilePlaceObjectNoiseMap(self, sizeX, sizeY, settings, position):
+    def compilePlaceObjectNoiseMap(self, sizeX, sizeY, settings):
+        """
+        Function to generate distribution map for each place objects
+
+        Parameters:
+            sizeX (int): total X size of place object map to be generated
+            sizeY (int): total Y size of place object map to be generated
+            settings (Setting): current place objects settings
+
+        Returns:
+            array: map of placements of the asset
+        """
+
         noiseMap = self.noise.getRandomNoiseMap(
                 {
                     "x": sizeX,
                     "y": sizeY
                 },
                 {  # Offset so that each asset would have a unique noise map
-                    "x": 7**(position+2),
-                    "y": 7**(position+2)
+                    "x": numpy.random.randint(0, REALY_BIG_NUMBER),
+                    "y": numpy.random.randint(0, REALY_BIG_NUMBER)
                 },
                 settings["clumping"],
                 settings["randomNoiseWeight"],
@@ -340,6 +590,17 @@ class Generator:
         return noiseMap
 
     def createObjectList(list, placeObjects=False):
+        """
+        Function to compile dictionary int o list of settings
+
+        Parameters:
+            list (dict): total X size of place object map to be generated
+            placeObjects (bool): is the list for place objects
+
+        Returns:
+            list: list of the apropriate Setting type
+        """
+
         resultingList = []
         for item in list:
             if placeObjects:
@@ -350,6 +611,17 @@ class Generator:
         return resultingList
 
     def createHeightColorMap(self, assetList):
+        """
+        Function to create a lookup map for distributing terrain assets.
+        Based of flag "heightBasedPlacement" it will either generate
+        tiles based on the height value,
+        Or by utilising noise.
+
+        Parameters:
+            assetList (list of terrain settings):
+                list of all tiles that are going to be used in terrain
+        """
+
         map = []
 
         if self.settings["heightBasedPlacement"]:
@@ -386,6 +658,16 @@ class Generator:
         y,
         assetList
     ):
+        """
+        Function to get asset from the generated elevation map.
+
+        Parameters:
+            x (float): X coordinate where to place the asset
+            y (float): Y coordinate where to place the asset
+            assetList (list of terrain settings):
+                list of all tiles that are going to be used in terrain
+        """
+
         if self.settings["heightBasedPlacement"]:
             height = int(self.elevation[x][y]/self.z*100)
             settings = assetList[self.elevationMap[height][0]].getParam()
@@ -411,6 +693,15 @@ class Generator:
 
 # Asset placement
     def populateElevation(self, assetList, offset):
+        """
+        Function to turn elevation into a list of TaleSpire assets.
+
+        Parameters:
+            assetList (list of terrain settings):
+                list of all tiles that are going to be used in terrain
+            offset (list): x and y offset for currently generating block
+        """
+
         for x in range(0, self.x):
             for y in range(0, self.y):
                 offsetX = x + offset[0]
@@ -445,6 +736,15 @@ class Generator:
                         )
 
     def populatePlaceObjects(self, assetList, offset):
+        """
+        Function to turn place object maps into a list of TaleSpire assets.
+
+        Parameters:
+            assetList (list of terrain settings):
+                list of all assets that are going to be placed on the terrain
+            offset (list): x and y offset for currently generating block
+        """
+
         for position, placement in enumerate(self.objectPlacements):
             for x in range(0, self.x * int(self.tileSize)):
                 for y in range(0, self.y * int(self.tileSize)):
@@ -458,10 +758,16 @@ class Generator:
                         scaledX = math.floor(x/self.tileSize) + offset[0]
                         scaledY = math.floor(y/self.tileSize) + offset[1]
 
-                        newX = x + 0.5
-                        newY = y + 0.5
-                        newZ = self.placeObjectZ[scaledX][scaledY] + assetSettings["verticalOffset"]
+                        placeHeight = self.placeObjectZ[scaledX][scaledY]
+
+                        newX = x
+                        newY = y
+                        newZ = placeHeight + assetSettings["verticalOffset"]
                         newRot = 0
+
+                        if assetSettings["placeOnCenter"]:
+                            newX += 0.5
+                            newY += 0.5
 
                         if assetSettings["randomRotationEnabled"]:
                             newRot = numpy.random.randint(4)*90

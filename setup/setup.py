@@ -44,12 +44,12 @@ def populateAssets():
     sqlQuerry = ""
 
     print("--Generating Tile SQL: ")
-    for pos, object in enumerate(objects["Tiles"]):
+    for object in objects["Tiles"]:
         tile = Tile(AssetManager.remap(object))
         sqlQuerry += tile.SqlValues()
 
     print("--Generating Prop SQL: ")
-    for pos, object in enumerate(objects["Props"]):
+    for object in objects["Props"]:
         prop = Prop(AssetManager.remap(object))
         sqlQuerry += prop.SqlValues()
 
