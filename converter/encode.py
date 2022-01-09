@@ -6,6 +6,9 @@ from utils import *
 HEADER = b'\xCE\xFA\xCE\xD1\x02\x00'
 PADDING = b'\x00\x00'
 
+class FakeTime:
+    def time(self):
+        return 0
 
 def create_header(unique_asset_count):
     """
@@ -43,7 +46,8 @@ def encode(data):
     asset_data = create_assets_data(slab_json['asset_data'], )
     slab_data += asset_data[0] + asset_data[1] + PADDING
 
-    slab_compressed_data = gzip.compress(slab_data, compresslevel=9, mtime=0)
+    gzip.time = FakeTime()
+    slab_compressed_data = gzip.compress(slab_data, compresslevel=9)
 
     if (len(slab_compressed_data) > 30720):
         print(f"""Slab exceeds TaleSpire size limit of 30720B binary data!
