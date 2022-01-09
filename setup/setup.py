@@ -1,4 +1,5 @@
 import json
+import os
 from database.database import Database
 from objects.asset import Asset
 from objects.assetManager import AssetManager
@@ -24,7 +25,8 @@ def setup():
 
 
     print("Populating tables:")
-    jsonFile = open('etc/index.json')
+    os.chdir('etc')
+    jsonFile = open('index.json')
     objects = json.load(jsonFile)
     jsonFile.close()
 

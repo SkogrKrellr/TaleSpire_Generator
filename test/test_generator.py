@@ -12,7 +12,7 @@ class TestGenerator(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-        print("\nGenerate: ", end='')
+        print("\nGenerate (last one takes ~30s, be patient!): ", end='')
         self.maxDiff = None
 
         self.customObjects = {
