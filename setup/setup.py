@@ -1,6 +1,4 @@
 import json
-from os import name
-
 from database.database import Database
 from objects.asset import Asset
 from objects.assetManager import AssetManager
@@ -17,26 +15,15 @@ def setup():
     input()
 
     print("Creating tables:")
-    createTables()
-
-    print("Populating tables:")
-    populateAssets()
-
-
-def createTables():
     database = Database()
     print("--Droping existing tables")
     database.execute(Asset.SqlDropTable())
 
     print("--Creating new tables")
     database.execute(Asset.SqlCreateTable())
-    database.close()
 
 
-def populateAssets():
-
-    database = Database()
-
+    print("Populating tables:")
     jsonFile = open('etc/index.json')
     objects = json.load(jsonFile)
     jsonFile.close()

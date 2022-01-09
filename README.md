@@ -22,13 +22,14 @@ Some examples of terrain generation: *(Skies are edited after the fact)*
 
 You will need to have Python3 ( v3.9 or above) installed, and Talespire installed on your machine.
 
-1. Clone the repo to your local
+1. Clone the repo to your local machine
 2. Locate `index.json` file in Talespire installation folder. 
    Most likely it is in: `..\Steam\steamapps\common\TaleSpire\Taleweaver\d71427a1-5535-4fa7-82d7-4ca1e75edbfd` 
    Place the *index.json* in the `etc` folder of the cloned repository
 3. Run the setup script with the command:
 
 ```bash
+# All commands are run from TaleSpire_Generator directory
 # This will install required packages
 pip install -r requirements.txt
 # This will create and populate the database

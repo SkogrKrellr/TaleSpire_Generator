@@ -27,12 +27,14 @@ class CustomAsset(Asset):
         """
 
         Asset.__init__(self, object)
+        self.determineSize()
+
+    def determineSize(self):
         if(
             self.mCenter == Quad(0, 0, 0, 0) or
             self.mExtent == Quad(0, 0, 0, 0)
         ):
-            decoded = ConversionManager.decode(self.string)
-            dictionary = decoded['asset_data']
+            dictionary = self.getDecoded()
             offset = {}
             extentsMax = {
                 "x": 0,

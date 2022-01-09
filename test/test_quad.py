@@ -31,9 +31,9 @@ class TestQuad(unittest.TestCase):
             "Prefix_x, Prefix_y, Prefix_z, Prefix_w"
         )
 
-    def test_sqlCreateTable(self):
+    def test_SqlCreateTableFields(self):
         self.assertMultiLineEqual(
-            Quad.SqlCreateTable(),
+            Quad.SqlCreateFields(),
             """
             _x FLOAT(24),
             _y FLOAT(24),
@@ -42,7 +42,7 @@ class TestQuad(unittest.TestCase):
             """.replace("    ", "").strip()
         )
         self.assertMultiLineEqual(
-            Quad.SqlCreateTable("Prefix"),
+            Quad.SqlCreateFields("Prefix"),
             """
             Prefix_x FLOAT(24),
             Prefix_y FLOAT(24),

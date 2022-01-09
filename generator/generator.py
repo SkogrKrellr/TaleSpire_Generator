@@ -1,6 +1,7 @@
 import json
 import math
 import numpy
+from generator.modifications import *
 from objects.tile import Tile
 from objects.assetManager import AssetManager
 from objects.customAsset import CustomAsset
@@ -51,7 +52,6 @@ class Generator:
         """
         Constructor for Generator class.
         """
-
         self.setXYZ(DEFAULT_X, DEFAULT_Y, DEFAULT_Z)
         self.setSeed(DEFAULTSEED)
         self.setOctaves(1, 0.5, 0.25, 0.125)
@@ -273,45 +273,6 @@ class Generator:
             1
         ))
 
-# Elevation Modifiers
-    def multiplyByValue(self, value=None):
-        """
-        Function to multiply elevation by a value.
-        If no value is provided, it will be multiplied by Z height
-
-        Parameters:
-            value (float): value for elevation multiplication
-        """
-
-        if value is None:
-            value = self.z
-        self.elevation *= value
-
-    def createTerrases(self, steps):
-        """
-        Function to devide terrain into step ammount of terrases
-
-        Parameters:
-            steps (int): number of terrasses to be generated
-        """
-
-        self.elevation = numpy.floor(self.elevation*steps)/steps
-
-    def redistribute(self, value=None):
-        """
-        Function to remap values by replacing each elevation value
-        by an exponated version of it.
-
-        If no value is provided, exponent value will be used.
-
-        Parameters:
-            value (float): exponent
-        """
-
-        if value is None:
-            value = self.exponent
-        self.elevation **= value
-
 # Generation
     def generate(
         self,
@@ -344,8 +305,8 @@ class Generator:
             self.y*sizes[1],
             terrainAssets
         )
-        self.redistribute()
-        self.multiplyByValue()
+        redistribute(self.elevation, self.exponent)
+        multiplyByValue(self.elevation, self.z)
         self.setTileSize(self.terrainAssets[0].mExtent.x*2.0)
 
         self.generatePlaceObjects(

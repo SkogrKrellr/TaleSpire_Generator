@@ -2,7 +2,7 @@ import uuid as UUID
 from objects.quad import Quad
 from config.config import config as Config
 
-TABLE_NAME = DATABASE_NAME = Config.get('tableName', 'assets')
+TABLE_NAME = Config.get('tableName', 'assets')
 
 
 class Asset:
@@ -153,11 +153,11 @@ class Asset:
         Name tinytext NOT NULL,
         AssetName tinytext NOT NULL,
         String text NULL,
-        {Quad.SqlCreateTable("Position")},
-        {Quad.SqlCreateTable("Rotation")},
-        {Quad.SqlCreateTable("Scale")},
-        {Quad.SqlCreateTable("mCenter")},
-        {Quad.SqlCreateTable("mExtent")}
+        {Quad.SqlCreateFields("Position")},
+        {Quad.SqlCreateFields("Rotation")},
+        {Quad.SqlCreateFields("Scale")},
+        {Quad.SqlCreateFields("mCenter")},
+        {Quad.SqlCreateFields("mExtent")}
         );""".replace("    ", "").strip()
 
         return output
@@ -170,7 +170,7 @@ class Asset:
             str: An SQL expression for creating table for assets.
         """
 
-        return f""" DROP TABLE IF EXISTS {TABLE_NAME}; """
+        return f"""DROP TABLE IF EXISTS {TABLE_NAME};"""
 
     def SqlGetAsset(uuid):
         """
@@ -183,7 +183,7 @@ class Asset:
             str: An SQL expression for get asset from specific table.
         """
 
-        return f""" SELECT * FROM {TABLE_NAME} WHERE UUID = '{uuid}'; """
+        return f"""SELECT * FROM {TABLE_NAME} WHERE UUID = '{uuid}';"""
 
     def SqlDeleteAsset(uuid):
         """
@@ -196,4 +196,4 @@ class Asset:
             str: An SQL expression for remove asset from specific table.
         """
 
-        return f""" DELETE FROM {TABLE_NAME} WHERE UUID = '{uuid}'; """
+        return f"""DELETE FROM {TABLE_NAME} WHERE UUID = '{uuid}';"""

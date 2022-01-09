@@ -2,6 +2,7 @@ import math
 import numpy
 from opensimplex import OpenSimplex
 from config.config import config as Config
+from generator.modifications import *
 from visualizer.visualizer import Visualizer
 
 
@@ -87,32 +88,10 @@ class Noise:
         value = self.noiseXY(x/scaleX, y/scaleY)
         return (1 + value) * 0.5
 
-    def getRidgeNoiseXY(self, x, y, scaleX, scaleY):
-        """
-        Function to change the distribution of values.
-        The new distribution follows the formula:
-
-            y = 2 * abs(0.5 - x)
-
-        y - new value
-        x - old value
-
-        Parameters:
-            x (int): X coordinate for noise
-            y (int): Y coordinate for noise
-            scaleX (float): Scaling factor for X
-            scaleY (float): Scaling factor for Y
-
-        Returns:
-            float: value at that scaled coordinate from 0.0 to 1.0
-        """
-
-        noiseValue = self.getNoiseXYValue(x, y, scaleX, scaleY)
-        return 2 * (0.5 - abs(0.5 - noiseValue))
-
     def generateSimpleNoiseArray(
         self,
-        xSize, ySize,
+        xSize,
+        ySize,
         scaleX,
         scaleY=None,
         offset={"x": 0, "y": 0},
@@ -140,25 +119,21 @@ class Noise:
         currentPass = numpy.zeros((xSize, ySize))
         for x in range(0, xSize):
             for y in range(0, ySize):
-                if useRidgeNoise:
-                    currentPass[x][y] = self.getRidgeNoiseXY(
-                        x + offset["x"],
-                        y + offset["y"],
-                        scaleX,
-                        scaleY
-                    )
-                else:
-                    currentPass[x][y] = self.getNoiseXYValue(
-                        x + offset["x"],
-                        y + offset["y"],
-                        scaleX,
-                        scaleY
-                    )
+                currentPass[x][y] = self.getNoiseXYValue(
+                    x + offset["x"],
+                    y + offset["y"],
+                    scaleX,
+                    scaleY
+                )
+
+        if useRidgeNoise:
+            currentPass = ridgeNoise(currentPass)
         return currentPass
 
     def generateComplexNoiseArray(
         self,
-        xSize, ySize,
+        xSize,
+        ySize,
         maxSize,
         combinedPasses=True,
         octaves=None,

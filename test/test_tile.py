@@ -33,3 +33,24 @@ class TestTile(unittest.TestCase):
             expected,
             self.tile.__str__()
         )
+
+    def test_SqlValues(self):
+        expected = f"""
+        INSERT INTO Assets
+        VALUES(
+            "32cfd208-c363-4434-b817-8ba59faeed17",
+            "Tile",
+            "Castle Floor 1",
+            "Castle01_floor_1x1_low",
+            "",
+            0.5, 0.5, 0.5, 0,
+            0, 0, 0, 1,
+            1, 1, 1, 0,
+            0.5, 0.25, 0.5, 0,
+            0.5, 0.25, 0.5, 0
+        );
+        """.replace("    ", "").strip()
+        self.assertMultiLineEqual(
+            expected,
+            self.tile.SqlValues()
+        )

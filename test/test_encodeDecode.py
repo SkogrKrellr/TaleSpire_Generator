@@ -138,4 +138,7 @@ class TestEncodeDecode(unittest.TestCase):
 
     def atest_decode(self):
         output = ConversionManager.decode(self.encoded)
-        self.assertDictEqual(self.decoded, output)
+        print(output)
+        self.assertTrue(
+            self.decoded == output
+        )

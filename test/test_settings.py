@@ -55,6 +55,7 @@ class TestSettings(unittest.TestCase):
         randomRotationEnabled: True
         heightBasedMultiplier: 1.0
         heightBasedOffset: -7
+        placeOnCenter: True
         """.replace("    ", "").strip()
         self.assertMultiLineEqual(
             self.placeObjectSettings.__str__(),
@@ -84,5 +85,21 @@ class TestSettings(unittest.TestCase):
         expected = None
         self.assertEqual(
             self.terrainSettings.getParam("NonExistantTag"),
+            expected
+        )
+
+    def test_zetParams(self):
+        expected = {
+            'asset': '3911d10d-142b-4f33-9fea-5d3a10c53781',
+            'density': 70,
+            'clumping': 11,
+            'heightMin': 12,
+            'heightMax': 57,
+            'blendHeightMultiplier': 1.0
+        }
+
+        self.terrainSettings.setParam("density", 70)
+        self.assertDictEqual(
+            self.terrainSettings.getParam(),
             expected
         )

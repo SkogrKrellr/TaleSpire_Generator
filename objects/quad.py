@@ -79,7 +79,7 @@ class Quad:
 
         return f"{prefix}_x, {prefix}_y, {prefix}_z, {prefix}_w"
 
-    def SqlCreateTable(prefix=""):
+    def SqlCreateFields(prefix=""):
         """
         Function to create table columns for Quad with a specific prefix.
 

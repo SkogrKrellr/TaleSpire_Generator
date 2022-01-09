@@ -34,3 +34,24 @@ class TestProp(unittest.TestCase):
             expected,
             self.prop.__str__()
         )
+
+    def test_SqlValues(self):
+        expected = f"""
+        INSERT INTO Assets
+        VALUES(
+            "6e22a681-4902-4cc4-a5f2-2284fb3c53b6",
+            "Prop",
+            "Campfire",
+            "VFX_SmallFire",
+            "",
+            0.020799368619918823, 0.29339998960494995, 0.04866328835487366, 0,
+            0, 0, 0, 1,
+            0.93205726146698, 0.93205726146698, 0.93205726146698, 0,
+            0, 0.3435215950012207, 0, 0,
+            0.38203075528144836, 0.34022027254104614, 0.36165329813957214, 0
+        );
+        """.replace("    ", "").strip()
+        self.assertMultiLineEqual(
+            expected,
+            self.prop.SqlValues()
+        )

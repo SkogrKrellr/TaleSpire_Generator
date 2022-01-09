@@ -26,7 +26,7 @@ class Visualizer():
             max (float): MAximum value to be displayed image.
         """
 
-        plt.imshow(image, cmap=DEFAULT_CMAP, interpolation='None')
+        plt.imshow(image, cmap=DEFAULT_CMAP)
 
         if clipping:
             plt.clim(min, max)
@@ -56,12 +56,16 @@ class Visualizer():
         rows = 1
         columns = len(images)
 
+        color_map = plt.cm.get_cmap(DEFAULT_CMAP)
+        reversed_color_map = color_map.reversed()
+
         fig = plt.figure(figsize=(10, 10))
         for n, image in enumerate(images):
             fig.add_subplot(rows, columns, n+1)
-            plt.imshow(image["map"], cmap=DEFAULT_CMAP, interpolation='None')
-            plt.axis('off')
+            plt.imshow(image["map"], cmap=reversed_color_map, interpolation='None')
             plt.title(image["name"])
+            # plt.clim(0, 1)
+            plt.colorbar()
         plt.show()
 
     def show3dPlot(

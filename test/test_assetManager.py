@@ -32,7 +32,7 @@ class TestAssetManager(unittest.TestCase):
             expected
         )
 
-    def atest_addCustomAsset(self):
+    def test_addCustomAsset(self):
 
         customAssetUUID = AssetManager.addCustomAsset(
             "Tree",
@@ -47,8 +47,8 @@ class TestAssetManager(unittest.TestCase):
         Position:   x: 0.0 y: 0.0 z: 0.0 w: 0.0
         Rotation:   x: 0.0 y: 0.0 z: 0.0 w: 0.0
         Scale:      x: 0.0 y: 0.0 z: 0.0 w: 0.0
-        mCenter:    x: 1.281880145072937 y: 1.2120859622955322 z: 0.0 w: 0.0
-        mExtent:    x: 1.281880145072937 y: 1.2120859622955322 z: 2.6 w: 0.0
+        mCenter:    x: 1.281880145072937 y: 1.2703428268432615 z: 0.0 w: 0.0
+        mExtent:    x: 1.281880145072937 y: 1.2703428268432615 z: 2.6 w: 0.0
         """.replace("    ", "").strip()
 
         object = AssetManager.getAsset(customAssetUUID)
@@ -114,9 +114,8 @@ class TestAssetManager(unittest.TestCase):
 
         AssetManager.removeAsset(customAssetUUID)
         asset = AssetManager.getAsset(customAssetUUID)
-        
+
         self.assertEqual(
             asset,
             None
         )
-

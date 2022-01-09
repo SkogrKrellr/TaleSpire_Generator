@@ -1,5 +1,6 @@
 import json
 import unittest
+import time
 import pyperclip
 
 from generator.generator import Generator
@@ -196,51 +197,6 @@ class TestGenerator(unittest.TestCase):
         self.assertEqual(expected, output, msg="Output strings are different!")
 
     def test_terrainGenerationPlaceObject(self):
-        expected = """```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```"""
-
-        self.generator.setXYZ(20, 20, 20)
-        self.generator.setOctaves(1, 0.5, 0.25)
-        self.generator.setScales(1, 2, 4)
-        self.generator.setExponent(1.5)
-        self.generator.setUsePreciseHeight(True)
-        self.generator.setUseRidgeNoise(False)
-
-        groundAssets = [
-            {"asset": "3911d10d-142b-4f33-9fea-5d3a10c53781"}
-        ]
-
-        placeObjects = [
-            {"asset": self.customObjects["Tree_4"]}
-        ]
-        output = self.generator.generate(
-            groundAssets,
-            placeObjects)[0]["output"]
-
-        self.assertEqual(expected, output, msg="Output strings are different!")
-
-    def test_terrainGenerationPlaceObject(self):
-        expected = """```H4sIAAAAAAAC/z1Zf2wk9XX/7s7szHp3dnbWZ5pLcylLBWEv/NoqV8W5kHQbTHMhSFkrKKJBVhcU5YzvQjYScg6apl/LR+7oAV5BSZzgkCUcsA1ENXdncYg7si6XlraHu5AUnSwrWODIBKGyyBSOxkn6+bz3hb8++rz3vm/mffa9NzP20v8tPZ82vjGm8HzpExcNfewLP3ptbGfy849PHU0bc+UnDv6F97XPX/XAU6ODW555cvnLiPM3v/D5HVee/7n9v/zRJ++/4s6pY7Ct7Hn416c//oErjv3rA8fv+Njdv2HcWyljaufa1Fup4/naueT9nGIlp/ZKrnuR8YQP094YqA1bn9gdcXGj9MM+Sjvix8iRZ0J5bUJ5d9JdZ5oI/zT9NurOEI/ngSny2hxxV6HbYX74Ozy/q1BboD2Ju4vKFZO4tuTsy4wHX3d8g/4zcc1MCa+ZFPzjSTdKwd4udiPaz8TEE2n4zzXeiTSug/pPpHEfqP9EmrpYnxw6GHLqcSKNei6iv+IQccP0o65hxlccIn5E7d0RtSsX/Tw5N0o7zo1qPuop58bUDj2NnBtz15kgUl93P5MubtL5p939ziinvlLPHOOpK+3UlUhdXb0LyqGrET2WnB5LVvTpLitCX1/4BrnoK5z6nkhTVyJ1TXn7vXaRuu73zlBfs99LHMJ/kXLqud/DdQWps02RQ78UOXXc71Ff5dSNnHqKf5R5VEfxj2k89RL/hDs/QS56Cdam9Vx3Rq8LfSQv+k/zdFx8h3HUx93novMv0i/958v9LimHTr7Uu+7qXSeXflRuUpKHfSk6RFN6LlI78Wp/PKFOV/uiH5D62RSROl3tUzdy5BumX/TyidAFdtWJSF2Ejymyb672qQf91EORcyl8xvE55++4PAs8D/uCy7fIPDp/cv0lvS76RuzUQfzrjm8wD+7PIeuXeJNSezSledE/QxnWbVNDGa2biHr9oUzyPrIfhjJaN5H1DmWkbkNk3cLHGMd+oF3rFj5JP+dGOfuBXFHnRvwzzj/n8nRcngWXf9HFL7r7WdL7UNS9JPcnqHpInEPqIXk2XJ4N5hFd9DrQSe5LOPWZ8iUuUjv5itNrRfXyVzI6XysZna8Vp9eK02slo30ifJRc9EqtOL1WnF4rTq+VjO7zFdXLrKhOYqdOK6qP+Lln5HxH81Anybvo8i666y3p9dkn4l/W+6Iu4l9nfpxfd+c29LrvIffOSqZCXfQ+0Dfk1OVwoH1D5JwcDpL3EfPiHQ5UByL7Rvgo/aoDkfUfDlQHInU4HOjeJXKPCJ9mHtEhJXFz6me/yPmOsy84vsh4rV/sS+56y7TDv8zraN2SxyH75HBQeR/ZD4cDPHehg9ilbjxXoMPeUOvfG+q+JWf95O8hdRA+QhQdDJH17w11fvaGsldTRD7X94byPBJkPwifpL8ifSH2aeXsD/HPuDxztIsuwqmL2Bdc/kUXt+TilphP9ZA8y3o96iH5HVKPvSHqdkg99oazWUXRwyOnPjuyiczHjqw+58k5H+ScF/FjTsQ/TK667MjqXiHyebMjq7oQOS87svqcJlKXHVl97yFSH+HT6mefiH3G5Zlz5+Z4TveL2Bdc/kXacc4hdZF8S+66y+46gqjXcepDzjkS+wYROmzQTn1SyNMLOT9ij5QTN0Ufm9pkvXh+b4o+1idn/2w6fcQ/TLvuE/GPkMvzObUpOjFO3282RSeividuOp2ETzKuIvO0qTr5Yp9RTn0kb8f5O8r5/iL+BeahTpqHem2qTkDosES76rPJepd5H6KPIX8Pqc8mddjgOdHHbDpdTg2IHkB9LyRn/5BTl1MD/Zxy1UXiBOW9MCVxI8o5d2IfdXyMqO95RO4Z4ZNq5zxJ3Iyzz+j1+JwW/5y7fkc5+0j8CxrPPSz2RcZBh0XGiS5A1L9Eu+oifJ3nUP86z1EPx9EvwjFXd+TkuwGo3w1EztEdOX0vFvswUb8fxD/C+Iq8D4t/lFhxqPtF/GPOPqHI57TwaZd/hnlRx4yzzzEO9czp9Vi/+Dsuz4Jy9onYF4mod5F+qR+I+pZ4XnUgZ7+IfZ3ns6KH2Ddoz7JPJI66iB3P42vyood3Tb7yPnJ+hA+T8zvK2UdcHOaD5/j7i33Map4Jd25COftB/JPuHPSQfNM8J3oon2Mc6prT61EHckXVQfwLzr7Ic7j/ReZRHYQv0446lxmn9QvfIOp8iB3vKZInSmke4LaIOlh/W6Tfk0T2x7YI9+OQOoh9hHH8LmKc9oWcE9S+2BbJc1jzTpDr80fOT2oezonknaadevA87muGdtVjW4T7nlPOPiHn80j8C87vkH0ifImYFV2I1EX4Ou21gLqIfYPYEz3Ej76Q66AvJB9wLdK+WIt0TtZED+uvOT3EPkLU78Q1p4ecGyXX5/Ga6mLWVBeNm2A+1UXyTLr8k5qPuqyxzmly6sK8uK8ZctHFCO8osj+ELypyTtZEB/qlL5CvFryHnBOxbzAf7Bu063ysqR5Grhul9DrQ47GC9Icg96dw7I3HCvr3hscKujfEP0K7fu/Rrqjfy2KfoF/f0ySPcO0P5nsPOTePFagD/dIf4KKDIHUQ3mG86iB8kZh9H6mD8GXH1xkvOnhi33D5ULf4oYNcL0ppftR/cyz9YG6OcV+Cui/Ejn64Oda/H4hdUOunnf1AzvrFjnrFPuHOT7h8k7Szftpx/Umek/rBcX/TjGP9jGP9ipwL4Qsax3kQvkTU+omsX/g64/X3lzgzpXZBfQ+TPHh+XF6UeoE6B+SKfambdv7+5Hz/uryodYt/lHH6/iX+Mfq1bjnnkHVK3knGsW7atW7hM7Rr/xO5F4R3HF9gXv3dhS8pcv4vL2rdYl9nvO5H8W8Q9feX66F+icNekOtCBz/R+v1Ef29y1u8nUr+hnTqQs/8lboRx+v4pcaPksheMxI3pOfaD+Cecf4Lx+p4l15lkPu0DIn9/4TPkqgeRegjvOL7APNoHwpeYn89LF7esnH0gfkF5/9T8Gy5uQ+ulHhKP+ZA49IXEYT5Oiz42ddrpc9rpc1p1MWKHLsJH6Zf3SrGz7+X8BOO13tOu3tOJ/v6neX/T9GvfC59zvMPz2vdybtHZBfV94bSrX/Ivq12R75Uubt3d14bej6J+t0qcoHy/aR70xdZ0LWntsuGF6dlBe8B4fw7s32nDi9P9ofaKMe10tpTcYMN70o0tzYet/+10Zaj9hPXb8Nffsf464s31NnwJ9vIpG17pzQ6WwU95jS3lI9hLXmWoftr6H/FnB1uHjBkA2rtt+FFg//s2/LbfHyq/aMzrfmNLba/1X/ArQ7VzpvwvZWYHa7jOA5nj5ySXWn820x+q7rT+YDA7uPqo8fYH9o/aFRt+JWhsqT9vw28GlaF+34afC4+fs3qJ9X8MLF9ozNGwV2rfhPsIZwd7TxjvO8DyS8b8SRbX/xvrfyPbK9V7NrxkIFuq32n98wd6peojNvzUQC1Zfdn63xuoDCW7jHcv7O3rjefleqXWuPHeQrzda0NiF3W/gvjkBWO+msuWVm+14c25+bjhT/m/BG9ZY04AzQFj/jm3r9hds+Gf5Xslcw10yWdL89BpW76W9JDnLvBkl/X78FdvMd6bsNujNrwi2lesPWn9oxH8lxqvHfVKq7dY/zh464ANjwCbd9jwkejVwuprxvtIAfdRMeYDhVpSu82GhcJ83EunzDdht7BPgJdPGe858PZ5xvsFeBvXPxbPx63HjfcQsPykDX8b43qXGe+dGL/HdcbLF2GfxfdK/GqhtmnD88BXvZT3nSKus92GNxZRH/roIOztX1n/S8Du2zZ8Fv4qfo+TxdnB6m5jnuK5R214EthEn30ymY+T+435S+D8SWN+nKD+3cb7h0Tv8wfJvmL5Dev/LkG9lxvvd+AW/bS7lC3VbrJ+s4Q+nrL+h9LDcRO/14fT1ciiry9It5L6AeicPhhXcV/D4L07jbcTfBV9fmn61cHeik1dnF5N+riPB9Om2Mfv/FD6bGTQ9630taXWwya4K10vWvT/36bLg90nTHBLemsyj/78Ic433zHBfTjfwDy8hvyrDeO9jvz9hg1fRrzB/a8hPoG+u7xWYpD/Ku9gnGBO/sW7ttR/3PrPePViD7r/k1cetKdN8Ii3NWlibip+K+kesqkLfdwv6o3AG3cbLwZvYo4uAe9933iX0Y95sv6rg/UXberv/dWkibn6jX9tqbHXBOt+vVjHfP2XXx5snJMKnvO3JnXM2RczyId6RjMH4zrquT8zv6V6qQnmMp1SGXN3bwb5dprgnsxqUsP8JUErmX/U+qXgYNzCHB4I9g2hn7zbg+ZgC/O4O7i2VH3eeDcG9WINc3lrUB7s9Y33rWBrsor5/KtwfotB/pGwU+pjTg+D1y+0qQfBm+iPx9EpTfyeR8JuoY65/UnYSrhvHg0PxhbzexC8/pJNHQBvYo4/lG0lScMEH8wejE0D7wXZZ4vVnvEms91CDXP90QFTbN5pgsrA2aiB+b5w4Nli8ojxtg90C2XM+c6B4Th5xQTDA9XIvIJ6B8qDq5+1/ncHtibdzxrvHsQ3r7f+PyK+jt8tlXu22Bi3fjqH/NgD7yA/9PXeRf4m9gF5+5Tyefzev0b+2gt4L0X+BvbDjTlT7N5qvD25s1EPe+IbuU5k/VTw9Vw718S+eJF+a1P/Df8q9sbT4NUDNnUSvI79cSTXLLTXjHcsN56fxx65NP9ssXyNCS7OdwsJ9sn5eVO0R6x/QR71Yq+cmx+O53E/5+WrEffUIfiru0xwO/xl7Jn/wXmDPfIGzq/uw15DfOOo8d5GfBN7pxY1C40nTfDpaDxfx/6Zj0yR+/Xx6GzUvcR4P4xw/lb0f9Qt9JHnKfibmLOT8FvspQXw+h3GewK8gf30ULSan3/N+g9HZwba2FPbC6aYbLepSuFsVN1uzB8XhuPybdiHhWpUxd4qFjqR8aZScaGdS7yUuQXx8xWb2of4HvbYOPz9Z6x/I/y9Z4z3n/A3z8NzEP469tqL8FvUfwb+Fuo/EneiBubtaNzO1TBvHXDzJPoMPMG+ezdGfej7d2PUhz37vzH66zrrvx1jnr9svLDYiWqzJgiK7VwVe/AP8Wq+vIm+KJ4ZqGIfngv/vDfll+FvYS/eXkQ92413qIh6sB93F5sF7Gt/vDiep077Ed/9lQmmET+PffnX4O23jXcdOfbmf+B8A/Px7zhvMR8/K2Jed9vU00XMA/bo0zyPOewivod9+jOeX6G/netin30qwf3ej/fOpJ1rYL9eAb560qY+A26exvM9we+3G8/ZBL//VzFfiep5e6J6fi9pFupvmODeZDxfw/79bYJ+vxz7Pzkb1bCH/wD/PPbT7+HvYT99pQT/TSa4oQT9McdfK6H/pkywp1SN2tjPH05Xcm3s5UraRtzHO4HmLhtelD4Tc/8+lO7nyti7d6V3FRrYt7ekk7iF+b+P///Dfn0d8dyba7BX8Xte5SEP+M+9XQXuz0e8JOb7xgW+jbgvY2ALe/IyoPmBDf/OPxNzL677uwpV7MPnfOTBHhzNIA+uM5dpFw1+/3syZ+Iy9t2WAOcf5X4bT9B34Y0B7gt77VtBEps3bTgStos9zMMDQO6vY+HxPPfWT0MbcV/dBuSe+mAW94P3jcns8XwDe6nCv5dhH23n3+2wh4YHKrke3jdmB5KYe+e7sHPf+Py71zj3ST/Xwn4h8j3hZcRzn+zJ9XN97JGv52azdeyPX4BzbzwF5L44lmsM9LAnLs4fz/e/iP2X7+e4F87LV3KryHM7uMEeeBN+zv/bsLcw95/G93tV3jfwno85vw/f/T3M90nwNub6CaDFPHfwXc05vgDfwZzfbfj+rWNuI3x3cl4nYeec7gFnPy2Bcy7PgHM/LvC78HHO32wW1ws3+f2JuTsb24jzFuD7JcGcpfA9U8d8/Sk45+oQvrfqmKcJfG9xjqZpx/xcB+xhbv4Nfs7LiSJ+B8xJF/Y+5uMEv4fQZzvxvsx5qAE5Bw/iO4f9fyjR+7wX78d83/g9v2vQ55vg7O8bSqgTfb2nhPzoZ2P+H3q+iSI0IQAA```"""
-
-        self.generator.setXYZ(20, 20, 20)
-        self.generator.setOctaves(1, 0.5, 0.25)
-        self.generator.setScales(1, 2, 4)
-        self.generator.setExponent(1.5)
-        self.generator.setUsePreciseHeight(True)
-        self.generator.setUseRidgeNoise(False)
-
-        groundAssets = [
-            {"asset": "3911d10d-142b-4f33-9fea-5d3a10c53781"}
-        ]
-        placeObjects = [
-            {"asset": self.customObjects["Tree_4"]}
-        ]
-        output = self.generator.generate(
-            groundAssets,
-            placeObjects)[0]["output"]
-
-        self.assertEqual(expected, output, msg="Output strings are different!")
-
-    def test_terrainGenerationPlaceObject(self):
         expected = """```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```"""
 
         self.generator.setXYZ(20, 20, 20)
@@ -419,3 +375,70 @@ class TestGenerator(unittest.TestCase):
         ]
         output = self.generator.generate(groundAssets, placeObjects, [3, 2])
         self.assertEqual(expected, output, msg="Output strings are different!")
+
+    def test_timedGeneration(self):
+        self.generator.setXYZ(20, 20, 30)
+        self.generator.setOctaves(1, 0.5, 0.25)
+        self.generator.setScales(1, 2, 4)
+        self.generator.setExponent(1.5)
+        self.generator.setUsePreciseHeight(True)
+        self.generator.setUseRidgeNoise(False)
+
+        groundAssets = [
+            {"asset": "cf6063bb-5c6e-4107-b3e9-9c0c5ac75768"}
+        ]
+        placeObjects = [
+            {"asset": self.customObjects["Tree_3"],
+                "density": 10,
+                "clumping": 32,
+                "randomNoiseWeight": 0.8,
+                "randomNudgeEnabled": True,
+                "randomRotationEnabled": True,
+                "heightBasedMultiplier": 0.5,
+                "heightBasedOffset": 0},
+            {"asset": self.customObjects["Tree_2"],
+                "density": 16,
+                "clumping": 16,
+                "randomNoiseWeight": 0.8,
+                "randomNudgeEnabled": True,
+                "randomRotationEnabled": True,
+                "heightBasedMultiplier": 0.5,
+                "heightBasedOffset": 0},
+            {"asset": self.customObjects["Tree_1"],
+                "density": 10,
+                "clumping": 1,
+                "randomNoiseWeight": 0.8,
+                "randomNudgeEnabled": True,
+                "randomRotationEnabled": True,
+                "heightBasedMultiplier": 1,
+                "heightBasedOffset": 0},
+            {"asset": "98259887-53c2-41d4-a54f-6140b6acf020",
+                "density": 50,
+                "clumping": 3,
+                "randomNoiseWeight": 0.8,
+                "randomNudgeEnabled": False,
+                "randomRotationEnabled": True,
+                "heightBasedMultiplier": 1,
+                "heightBasedOffset": -10},
+            {"asset": "6ba81f8e-9a9c-4745-990f-2cb27bb29cfc",
+                "density": 20,
+                "clumping": 16,
+                "randomNoiseWeight": 1.0,
+                "randomNudgeEnabled": True,
+                "randomRotationEnabled": False,
+                "heightBasedMultiplier": 1,
+                "heightBasedOffset": -5},
+            {"asset": self.customObjects["Tree_2"],
+                "density": 20,
+                "clumping": 16,
+                "randomNoiseWeight": 1.0,
+                "randomNudgeEnabled": True,
+                "randomRotationEnabled": False,
+                "heightBasedMultiplier": 1,
+                "heightBasedOffset": -5}
+        ]
+        start_time = time.time()
+        output = self.generator.generate(groundAssets, placeObjects, [10, 10])
+        end_time = time.time()
+
+        self.assertLessEqual(end_time-start_time, 30, msg="Generation takes too long!")
