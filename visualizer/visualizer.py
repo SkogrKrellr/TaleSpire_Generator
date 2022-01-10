@@ -36,6 +36,9 @@ class Visualizer():
 
     def showImages(
         images,
+        clipping=True,
+        min=0.0,
+        max=1.0
     ):
         """
         Function for showing a single map on the screen as 2d plots.
@@ -50,7 +53,10 @@ class Visualizer():
             ]
 
         Parameters:
-            images (list of dict): A list of dictionaries to be displayed
+            images (list of dict): A list of dictionaries to be displayed.
+            clipping (bool): Enable clipping of displayed image.
+            min (float): Minimum value to be displayed image.
+            max (float): MAximum value to be displayed image.
         """
 
         rows = 1
@@ -64,13 +70,16 @@ class Visualizer():
             fig.add_subplot(rows, columns, n+1)
             plt.imshow(image["map"], cmap=reversed_color_map, interpolation='None')
             plt.title(image["name"])
-            # plt.clim(0, 1)
+            if clipping:
+                plt.clim(min, max)
             plt.colorbar()
         plt.show()
 
     def show3dPlot(
         image,
-        clip01=True
+        clipping=True,
+        min=0.0,
+        max=1.0
     ):
 
         """
@@ -78,7 +87,9 @@ class Visualizer():
 
         Parameters:
             image (2d array): A 2d array to be displayed.
-            clip01 (bool): Enable clipping of values to 0 to 1.
+            clipping (bool): Enable clipping of displayed image.
+            min (float): Minimum value to be displayed image.
+            max (float): MAximum value to be displayed image.
         """
         (x, y) = numpy.meshgrid(
             numpy.arange(image.shape[0]),
@@ -86,7 +97,7 @@ class Visualizer():
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
 
-        if clip01:
+        if clipping:
             ax.set_zlim3d(0, 1)
 
         surf = ax.plot_surface(x, y, image, cmap=DEFAULT_CMAP)

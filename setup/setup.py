@@ -23,7 +23,6 @@ def setup():
     print("--Creating new tables")
     database.execute(Asset.SqlCreateTable())
 
-
     print("Populating tables:")
     os.chdir('etc')
     jsonFile = open('index.json')

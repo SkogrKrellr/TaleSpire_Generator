@@ -627,6 +627,9 @@ class Generator:
             y (float): Y coordinate where to place the asset
             assetList (list of terrain settings):
                 list of all tiles that are going to be used in terrain
+
+        Returns:
+            int: assets position in assetlist
         """
 
         if self.settings["heightBasedPlacement"]:
