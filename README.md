@@ -109,6 +109,8 @@ output = generator.generate(
     placeObjects,
     [xTiles, yTiles]
 )
+
+print(json.dumps(output, indent=4)) 
 ```
 
 Output: 
