@@ -49,6 +49,7 @@ Here we see a basic use case, where we want to generate a 20 tile x 30 tile terr
 Create a file example.py, which contains:
 
 ```python
+import json
 from generator.generator import Generator
 from objects.assetManager import AssetManager
 
