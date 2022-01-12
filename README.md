@@ -115,9 +115,8 @@ output = generator.generate(
 print(json.dumps(output, indent=4)) 
 ```
 
-Use command to get the output
-```
-# Check if everything is working by running unittests
+Use this command to generate the output
+```bash
 python .\exapmle.py
 ```
 
