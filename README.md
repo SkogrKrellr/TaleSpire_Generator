@@ -46,6 +46,8 @@ python -m unittest
 
 Here we see a basic use case, where we want to generate a 20 tile x 30 tile terrain, with simple place objects. 
 
+Create a file example.py, which contains:
+
 ```python
 from generator.generator import Generator
 from objects.assetManager import AssetManager
@@ -111,6 +113,12 @@ output = generator.generate(
 )
 
 print(json.dumps(output, indent=4)) 
+```
+
+Use command to get the output
+```
+# Check if everything is working by running unittests
+python .\exapmle.py
 ```
 
 Output: 
