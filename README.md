@@ -65,13 +65,14 @@ exponent = 1.3
 xTiles, yTiles = 2, 3
 
 # Set operating variables
-generator.setXYZ(x, y, z)
-generator.setExponent(exponent)
-generator.setSeed(seed)
+
+generator.setXYZ(x, y, z) # How large will one tile be
+generator.setExponent(exponent) # What is the exponent for redistribution
+generator.setSeed(seed) # Seed for repeatable results
 generator.setOctaves(1, 0.5)
 generator.setScales(1, 4)
-generator.setUsePreciseHeight(True)
-generator.setUseRidgeNoise(False)
+generator.setUsePreciseHeight(True) # If generating more than 1x1 consequitive tiles, this should be enabled
+generator.setUseRidgeNoise(False) # Redistributes values to make ridges, good for deserts
 
 terrainAssets = [
     {  # Grass - Lush
