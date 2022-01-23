@@ -87,6 +87,9 @@ generator.setUseHeightBasedTerrainAssetPlacement(False) # Place terrain assets b
 # "heightMax":              [Integer] Maximum height at which this tile will appear (If height based distribution enabled),
 # "blendHeightMultiplier":  [Float] How much tiles spread from minimum and maximum height (If height based distribution enabled),
 
+
+# Asset UUIDs can be found here: https://talesbazaar.com/game/tiles
+
 terrainAssets = [
     {  # Grass - Lush
         "asset": "01c3a210-94fb-449f-8c47-993eda3e7126",
@@ -118,6 +121,9 @@ customTreeUUID = AssetManager.addCustomAsset(
 # "heightBasedMultiplier":  [Float]   Multiplier fir how much more likely are objects to appear lower in terrain 
 # "heightBasedOffset":      [Float]   Constant offset of how likelieness of objects are to appear lower
 # "placeOnCenter":          [Boolean] Objects will be placed on center of tiles
+
+
+# Asset UUIDs can be found here: https://talesbazaar.com/game/props
 
 placeObjects = [
     {  # Custom Tree
