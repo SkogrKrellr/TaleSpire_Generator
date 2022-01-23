@@ -251,9 +251,9 @@ class Noise:
         noiseMap = (noiseMap * (1-randomWeight)) + (randomMap * randomWeight)
 
         # Normalize so that values are in range of [0.0, 1.0]
-        correctionMin = numpy.amin(noiseMap)
-        correctionMax = numpy.amax(noiseMap)
-        noiseMap -= correctionMin
-        noiseMap *= 1.0/(correctionMax-correctionMin)
+        # correctionMin = numpy.amin(noiseMap)
+        # correctionMax = numpy.amax(noiseMap)
+        # noiseMap -= correctionMin
+        # noiseMap *= 1.0/(correctionMax-correctionMin)
 
         return noiseMap * 100.0

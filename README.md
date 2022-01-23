@@ -46,12 +46,15 @@ python -m unittest
 
 Here we see a basic use case, where we want to generate a 20 tile x 30 tile terrain, with simple place objects. 
 
-Create a file example.py, which contains:
+Inspect example.py, which contains:
 
 ```python
 import json
 from generator.generator import Generator
 from objects.assetManager import AssetManager
+import pyperclip as pc
+
+from visualizer.visualizer import Visualizer
 
 generator = Generator()
 
@@ -69,10 +72,20 @@ xTiles, yTiles = 2, 3
 generator.setXYZ(x, y, z) # How large will one tile be
 generator.setExponent(exponent) # What is the exponent for redistribution
 generator.setSeed(seed) # Seed for repeatable results
-generator.setOctaves(1, 0.5)
-generator.setScales(1, 4)
+generator.setOctaves(1, 0.5, 0.25)
+generator.setScales(1, 2, 4)
 generator.setUsePreciseHeight(True) # If generating more than 1x1 consequitive tiles, this should be enabled
 generator.setUseRidgeNoise(False) # Redistributes values to make ridges, good for deserts
+generator.setUseHeightBasedTerrainAssetPlacement(False) # Place terrain assets based on height
+
+# Possible options for terrain asset:
+# 
+# "asset":                  [String]  Asset that is going to be placed [REQUIRED]
+# "clumping":               [Integer] How much similar tiles will clump together
+# "density":                [Integer] Proportion of it in terrain (If height based distribution disabled),
+# "heightMin":              [Integer] Minimum height at which this tile will appear (If height based distribution enabled),
+# "heightMax":              [Integer] Maximum height at which this tile will appear (If height based distribution enabled),
+# "blendHeightMultiplier":  [Float] How much tiles spread from minimum and maximum height (If height based distribution enabled),
 
 terrainAssets = [
     {  # Grass - Lush
@@ -85,10 +98,26 @@ terrainAssets = [
     },
 ]
 
+
+# This is how we add custom complex assets
 customTreeUUID = AssetManager.addCustomAsset(
                 "Tree 4 Tall",
                 "```H4sIAAAAAAAACzv369xFJgZmBgYGV8sOe+Zcb6+FuwOFhA/vvMUIFGP54+9t4qri2XJlvvU8595GJqDYnexlT8+YiztvObZwR4/xpJcgdYwMEmxACmiOAIsBQwMjEwMHUwADBEBoAGi/N01oAAAA```"
             )
+
+
+# Possible options for place object assets:
+# 
+# "asset":                  [String] Asset UUID that is going to be placed [REQUIRED]
+# "density":                [Integer] How often do objects appear 
+# "verticalOffset":         [Float]   Vertical offset for objecy (if you want to place things into the earth)
+# "clumping":               [Float]   How much similar tiles will clump together,
+# "randomNoiseWeight":      [Float]   How much random random noise affects object placement
+# "randomNudgeEnabled":     [Boolean] Will object be slightly nudged from its center
+# "randomRotationEnabled":  [Boolean] Will objects have random rotation enabled
+# "heightBasedMultiplier":  [Float]   Multiplier fir how much more likely are objects to appear lower in terrain 
+# "heightBasedOffset":      [Float]   Constant offset of how likelieness of objects are to appear lower
+# "placeOnCenter":          [Boolean] Objects will be placed on center of tiles
 
 placeObjects = [
     {  # Custom Tree
@@ -108,13 +137,39 @@ placeObjects = [
     },
 ]
 
-output = generator.generate(
+generator.pregenerate(
     terrainAssets,
     placeObjects,
     [xTiles, yTiles]
 )
 
-print(json.dumps(output, indent=4)) 
+# If we want to visualize the used heightmap in 2d
+Visualizer.showImage(generator.elevation, True, 0, z)
+
+# If we want to visualize the used heightmap in 3d
+Visualizer.show3dPlot(generator.elevation, True, 0, z)
+
+# If we want to visualize the object placements
+Visualizer.showImages(generator.objectPlacements)
+
+print("Do you want to continue with these results? Enter - yes, Ctrl-C - no")
+input()
+
+output = generator.generate()
+
+# Quick and dirty json output
+# print(json.dumps(output, indent=4))
+
+# More elegant output to clipboard
+print(f"Your terrain consists of {xTiles} by {yTiles} tiles.")
+print("Now Just paste them one by one into talespire, lining them up!")
+
+for entry in output:
+    print(f"\t{entry['x']+1} : {entry['y']+1} copied into clipboard! Press enter to copy next tile", end = '')
+    pc.copy(entry["output"])
+    input()
+
+print("All Done!") 
 ```
 
 Use this command to generate the output
@@ -122,7 +177,7 @@ Use this command to generate the output
 python .\exapmle.py
 ```
 
-Output: 
+Json Output: 
 
 ```json
 [

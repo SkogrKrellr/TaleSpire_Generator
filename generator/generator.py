@@ -29,6 +29,7 @@ class Generator:
 
     Attributes:
         x,y,z (int): size of block to generate
+        sizes (int, int) how many tiles are in x and y direction
         noise (Noise): noise generator
         expontent (float): exponent for redistributing terrain
         settings (dict): flags that alter generation
@@ -83,6 +84,17 @@ class Generator:
         """
 
         self.noise.setOctaves(*args)
+
+    def setSize(self, x, y):
+        """
+        Setter for tile amount in x and y direction.
+
+        Parameters:
+            x (int) tile ammount in x
+            y (int) tile ammount in y
+        """
+
+        self.sizes = (x,y)
 
     def setScales(self, *args):
         """
@@ -274,37 +286,25 @@ class Generator:
         ))
 
 # Generation
-    def generate(
+
+    def pregenerate(
         self,
         terrainAssets=[],
         placeObjects=[],
         sizes=[1, 1]
-    ):
-        """
-        Function to generate X*Y ammount of terrain blocks, with
-        a set list of assets to be used in terrain.
-        And a set list of assets to be placed on the terrain
+        ):
 
-        Parameters:
-            terrainAssets (list): list of terrain settings
-            placeObjects (list): list of place object settings
-            size (list): x and y component for how many blocks to generate in
-                         each direction
+        self.terrainAssets = Generator.createObjectList(terrainAssets)
+        self.placeObjects = Generator.createObjectList(placeObjects, True)
 
-        Returns:
-            dict: generated output for each x, y coordinate
-        """
-
-        result = []
-
-        terrainAssets = Generator.createObjectList(terrainAssets)
-        placeObjects = Generator.createObjectList(placeObjects, True)
+        self.setSize(sizes[0], sizes[1])
 
         self.generateElevation(
             self.x*sizes[0],
             self.y*sizes[1],
-            terrainAssets
+            self.terrainAssets
         )
+        
         redistribute(self.elevation, self.exponent)
         multiplyByValue(self.elevation, self.z)
         self.setTileSize(self.terrainAssets[0].mExtent.x*2.0)
@@ -312,15 +312,27 @@ class Generator:
         self.generatePlaceObjects(
             int(self.x*sizes[0]*self.tileSize),
             int(self.y*sizes[1]*self.tileSize),
-            placeObjects
+            self.placeObjects
         )
 
-        for x in range(sizes[0]):
-            for y in range(sizes[1]):
+    def generate(self):
+        """
+        Function to generate X*Y ammount of terrain blocks, with
+        a set list of assets to be used in terrain.
+        And a set list of assets to be placed on the terrain
+
+        Returns:
+            dict: generated output for each x, y coordinate
+        """
+
+        result = []
+
+        for x in range(self.sizes[0]):
+            for y in range(self.sizes[1]):
                 self.initializeOutput
                 output = self.generatePart(
-                    terrainAssets,
-                    placeObjects,
+                    self.terrainAssets,
+                    self.placeObjects,
                     [x * self.x, y * self.y]
                 )
                 result.append({
@@ -677,7 +689,7 @@ class Generator:
                         )
                 asset = self.terrainAssets[assetPosition]
 
-                if self.settings["preciseHeight"] and x == 1 and y == 1:
+                if self.settings["preciseHeight"] and x == 0 and y == 0:
                     self.place(
                         asset,
                         x * self.tileSize,
